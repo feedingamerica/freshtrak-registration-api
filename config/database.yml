@@ -19,5 +19,5 @@ test:
 
 production:
   <<: *default
-  database: freshtrak_registration
+  database: registration_api_production
   url: <%= ENV['DATABASE_URL'] %>
