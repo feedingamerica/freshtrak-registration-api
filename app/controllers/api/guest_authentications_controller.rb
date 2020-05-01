@@ -1,4 +1,5 @@
-class Api::GuestAuthenticationsController < ApplicationController
+class Api::GuestAuthenticationsController < Api::BaseController
+  skip_before_action :authenticate_user!
   before_action :set_guest_user
 
   # POST /api/guest_authentications

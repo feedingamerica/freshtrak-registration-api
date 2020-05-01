@@ -11,6 +11,10 @@ class Authentication < ApplicationRecord
     where(expires_at: Time.now..1.year.from_now)
   }
 
+  def self.authenticate_with_token(token)
+    unexpired.find_by(token: token)
+  end
+
   private
 
   def set_expiry
