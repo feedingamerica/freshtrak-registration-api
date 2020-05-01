@@ -5,6 +5,12 @@ AllCops:
   Exclude:
     - 'db/schema.rb'
     - 'vendor/**/*'
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+Lint/RaiseException:
+  Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
 Metrics/AbcSize:
   Exclude:
     - 'spec/**/*'
@@ -28,6 +34,8 @@ RSpec/MultipleExpectations:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'bin/*'
+Style/ExponentialNotation:
+  Enabled: true
 Style/HashEachMethods:
   Enabled: true
 Style/HashTransformKeys:
