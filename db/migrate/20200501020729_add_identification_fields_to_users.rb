@@ -19,8 +19,8 @@ class AddIdentificationFieldsToUsers < ActiveRecord::Migration[6.0]
     add_column :users, :seniors_in_household, :integer
     add_column :users, :adults_in_household, :integer
     add_column :users, :children_in_household, :integer
-    add_column :users, :identification_code, :string, null: false
+    add_column :users, :id_code, :string, null: false
 
-    add_index :users, :identification_code, unique: true
+    add_index :users, :id_code, unique: true
   end
 end

@@ -3,23 +3,26 @@
 require 'securerandom'
 
 module SecureRandom
-  BASE27_ALPHABET = ('0'..'9').to_a + ('A'..'Z').to_a - %w[0 1 O I A E U]
+  # Use only lowercase letters to make it easy for users 
+  #   entering codes on smart phones
+  # Exclude letters that could result in offensive codes
+  SAFE_ALPHABET = (('a'..'z').to_a - %w[a e i o u l v]).freeze
 
-  # SecureRandom.base27 generates a random base27 string.
+  # Generates a variable length code with a provided character set
   #
-  # The argument _n_ specifies the length, of the random string to be generated.
+  # @param [Integer] n desired length of the code
+  # @param [Array<String>] charset array of allowed characters 
   #
-  # If _n_ is not specified or is +nil+, 16 is assumed.
+  # @return [String] the generated random code
   #
-  # The result may contain alphanumeric characters except 0, 1, O, I, A, E, and
-  # U to avoid hard-to-differentiate characters and potentially offensive words
+  # @example Generate a code
+  #   SecureRandom.generate_code                   # => "nhrpwkpyyydjdpmf"
+  #   SecureRandom.generate_code(4, ['X','Y','Z']) # => "YYXZ"
   #
-  #   p SecureRandom.base27 # => "JA7T58M7LJ65XEX4"
-  #   p SecureRandom.base27(9) # => "QUL7MNGQS"
-  #
-  def self.base27(n = 16)
+  def self.generate_code(n = 16, charset = SAFE_ALPHABET)
+    charset_size = charset.size
     SecureRandom.random_bytes(n).unpack('C*').map { |byte|
-      BASE27_ALPHABET[byte % 27]
+      charset[byte % charset_size]
     }.join
   end
 end

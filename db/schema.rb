@@ -54,8 +54,8 @@ ActiveRecord::Schema.define(version: 2020_05_01_040916) do
     t.integer "seniors_in_household"
     t.integer "adults_in_household"
     t.integer "children_in_household"
-    t.string "identification_code", null: false
-    t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
+    t.string "id_code", null: false
+    t.index ["id_code"], name: "index_users_on_id_code", unique: true
   end
 
   add_foreign_key "authentications", "users"

@@ -9,7 +9,7 @@ class PantryFinderApi
   end
 
   def event_date(id)
-    client.get("#{BASE_URL}/event_dates/#{id}").body
+    client.get("#{BASE_URL}/event_dates/#{id}").body[:event_date]
   end
 
   private
