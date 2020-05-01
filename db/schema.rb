@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_01_000941) do
+ActiveRecord::Schema.define(version: 2020_05_01_020729) do
 
   create_table "authentications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -26,6 +26,27 @@ ActiveRecord::Schema.define(version: 2020_05_01_000941) do
     t.string "user_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "last_name"
+    t.string "suffix"
+    t.date "date_of_birth"
+    t.string "gender"
+    t.string "phone"
+    t.boolean "permission_to_text"
+    t.string "email"
+    t.boolean "permission_to_email"
+    t.string "address_line_1"
+    t.string "address_line_2"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
+    t.string "license_plate"
+    t.integer "number_of_seniors_in_household"
+    t.integer "number_of_adults_in_household"
+    t.integer "number_of_children_in_household"
+    t.string "identification_code", null: false
+    t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
   end
 
   add_foreign_key "authentications", "users"
