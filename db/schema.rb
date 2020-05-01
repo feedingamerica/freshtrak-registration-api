@@ -42,9 +42,9 @@ ActiveRecord::Schema.define(version: 2020_05_01_020729) do
     t.string "state"
     t.string "zip_code"
     t.string "license_plate"
-    t.integer "number_of_seniors_in_household"
-    t.integer "number_of_adults_in_household"
-    t.integer "number_of_children_in_household"
+    t.integer "seniors_in_household"
+    t.integer "adults_in_household"
+    t.integer "children_in_household"
     t.string "identification_code", null: false
     t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
   end

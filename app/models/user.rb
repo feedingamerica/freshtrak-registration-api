@@ -5,9 +5,9 @@ class User < ApplicationRecord
 
   has_many :authentications, inverse_of: :user, dependent: :destroy
 
-  before_validation :set_identification_code
+  before_validation :set_identification_code, on: :create
 
-  validates :indentification_code, presence: true, uniqueness: true
+  validates :identification_code, presence: true, uniqueness: true
 
   private
 

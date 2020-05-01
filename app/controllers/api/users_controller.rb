@@ -6,7 +6,7 @@ class Api::UsersController < Api::BaseController
 
   # PATCH/PUT /api/user
   def update
-    if current_user.update(api_user_params)
+    if current_user.update(user_params)
       render json: current_user
     else
       render json: current_user.errors, status: :unprocessable_entity
@@ -16,7 +16,13 @@ class Api::UsersController < Api::BaseController
   private
 
   # Only allow a trusted parameter "white list" through.
-  def api_user_params
-    params.fetch(:api_user, {})
+  def user_params
+    params.require(:user).permit(
+      :first_name, :middle_name, :last_name, :suffix, :date_of_birth,
+      :gender, :phone, :permission_to_text, :email, :permission_to_email,
+      :address_line_1, :address_line_2, :city, :state, :zip_code,
+      :license_plate, :seniors_in_household, :adults_in_household,
+      :children_in_household
+    )
   end
 end

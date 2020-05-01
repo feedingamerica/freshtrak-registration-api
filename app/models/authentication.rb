@@ -1,5 +1,5 @@
 class Authentication < ApplicationRecord
-  EXPIRATION = 14.days.from_now
+  EXPIRATION_PERIOD = 14.days
 
   has_secure_token
 
@@ -18,6 +18,6 @@ class Authentication < ApplicationRecord
   private
 
   def set_expiry
-    self.expires_at = EXPIRATION
+    self.expires_at = Time.now + EXPIRATION_PERIOD
   end
 end
