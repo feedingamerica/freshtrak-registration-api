@@ -29,3 +29,7 @@ group :test do
   # when starting jets console
   gem 'rspec'
 end
+
+gem "faraday", "~> 1.0"
+
+gem "faraday_middleware", "~> 1.0"

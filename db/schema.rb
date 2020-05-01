@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_01_020729) do
+ActiveRecord::Schema.define(version: 2020_05_01_040916) do
 
   create_table "authentications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -20,6 +20,15 @@ ActiveRecord::Schema.define(version: 2020_05_01_020729) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["token"], name: "index_authentications_on_token", unique: true
     t.index ["user_id"], name: "index_authentications_on_user_id"
+  end
+
+  create_table "reservations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "event_date_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["event_date_id"], name: "index_reservations_on_event_date_id"
+    t.index ["user_id"], name: "index_reservations_on_user_id"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -50,4 +59,5 @@ ActiveRecord::Schema.define(version: 2020_05_01_020729) do
   end
 
   add_foreign_key "authentications", "users"
+  add_foreign_key "reservations", "users"
 end

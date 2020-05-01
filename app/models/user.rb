@@ -4,6 +4,7 @@ class User < ApplicationRecord
   }
 
   has_many :authentications, inverse_of: :user, dependent: :destroy
+  has_many :reservations, inverse_of: :user, dependent: :restrict_with_exception
 
   before_validation :set_identification_code, on: :create
 
