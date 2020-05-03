@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Authentications to allow api access
 class Authentication < ApplicationRecord
   EXPIRATION_PERIOD = 14.days
 

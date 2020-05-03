@@ -2,16 +2,17 @@
 
 require 'securerandom'
 
+# Ruby StdLib SecureRandom
 module SecureRandom
-  # Use only lowercase letters to make it easy for users 
+  # Use only lowercase letters to make it easy for users
   #   entering codes on smart phones
   # Exclude letters that could result in offensive codes
   SAFE_ALPHABET = (('a'..'z').to_a - %w[a e i o u l v]).freeze
 
   # Generates a variable length code with a provided character set
   #
-  # @param [Integer] n desired length of the code
-  # @param [Array<String>] charset array of allowed characters 
+  # @param [Integer] len desired length of the code
+  # @param [Array<String>] charset array of allowed characters
   #
   # @return [String] the generated random code
   #
@@ -19,10 +20,10 @@ module SecureRandom
   #   SecureRandom.generate_code                   # => "nhrpwkpyyydjdpmf"
   #   SecureRandom.generate_code(4, ['X','Y','Z']) # => "YYXZ"
   #
-  def self.generate_code(n = 16, charset = SAFE_ALPHABET)
+  def self.generate_code(len = 16, charset = SAFE_ALPHABET)
     charset_size = charset.size
-    SecureRandom.random_bytes(n).unpack('C*').map { |byte|
+    SecureRandom.random_bytes(len).unpack('C*').map do |byte|
       charset[byte % charset_size]
-    }.join
+    end.join
   end
 end

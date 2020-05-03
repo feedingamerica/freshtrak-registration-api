@@ -1,21 +1,26 @@
-class Api::GuestAuthenticationsController < Api::BaseController
-  skip_before_action :authenticate_user!
-  before_action :set_guest_user
+# frozen_string_literal: true
 
-  # POST /api/guest_authentications
-  def create
-    @authentication = @guest_user.authentications.new
+module Api
+  # Create a temporary guest user and authentication
+  class GuestAuthenticationsController < Api::BaseController
+    skip_before_action :authenticate_user!
+    before_action :set_guest_user
 
-    if @guest_user.save
-      render json: @authentication, status: :created
-    else
-      render json: @authentication.errors, status: :unprocessable_entity
+    # POST /api/guest_authentications
+    def create
+      @authentication = @guest_user.authentications.new
+
+      if @guest_user.save
+        render json: @authentication, status: :created
+      else
+        render json: @authentication.errors, status: :unprocessable_entity
+      end
     end
-  end
 
-  private
+    private
 
-  def set_guest_user
-    @guest_user = User.new(user_type: :guest)
+    def set_guest_user
+      @guest_user = User.new(user_type: :guest)
+    end
   end
 end

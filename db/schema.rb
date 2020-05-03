@@ -39,12 +39,9 @@ ActiveRecord::Schema.define(version: 2020_05_01_040916) do
     t.string "middle_name"
     t.string "last_name"
     t.string "suffix"
-    t.date "date_of_birth"
     t.string "gender"
     t.string "phone"
-    t.boolean "permission_to_text"
     t.string "email"
-    t.boolean "permission_to_email"
     t.string "address_line_1"
     t.string "address_line_2"
     t.string "city"
@@ -54,8 +51,11 @@ ActiveRecord::Schema.define(version: 2020_05_01_040916) do
     t.integer "seniors_in_household"
     t.integer "adults_in_household"
     t.integer "children_in_household"
-    t.string "id_code", null: false
-    t.index ["id_code"], name: "index_users_on_id_code", unique: true
+    t.boolean "permission_to_email"
+    t.boolean "permission_to_text"
+    t.date "date_of_birth"
+    t.string "identification_code", null: false
+    t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
   end
 
   add_foreign_key "authentications", "users"

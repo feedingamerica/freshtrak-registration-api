@@ -1,26 +1,19 @@
+# frozen_string_literal: true
+
+# Migration to add data/identification fields to users
 class AddIdentificationFieldsToUsers < ActiveRecord::Migration[6.0]
   def change
-    add_column :users, :first_name, :string
-    add_column :users, :middle_name, :string
-    add_column :users, :last_name, :string
-    add_column :users, :suffix, :string
-    add_column :users, :date_of_birth, :date
-    add_column :users, :gender, :string
-    add_column :users, :phone, :string
-    add_column :users, :permission_to_text, :boolean
-    add_column :users, :email, :string
-    add_column :users, :permission_to_email, :boolean
-    add_column :users, :address_line_1, :string
-    add_column :users, :address_line_2, :string
-    add_column :users, :city, :string
-    add_column :users, :state, :string
-    add_column :users, :zip_code, :string
-    add_column :users, :license_plate, :string
-    add_column :users, :seniors_in_household, :integer
-    add_column :users, :adults_in_household, :integer
-    add_column :users, :children_in_household, :integer
-    add_column :users, :id_code, :string, null: false
+    change_table :users, bulk: true do |users|
+      users.string :first_name, :middle_name, :last_name, :suffix, :gender,
+                   :phone, :email, :address_line_1, :address_line_2, :city,
+                   :state, :zip_code, :license_plate
+      users.integer :seniors_in_household, :adults_in_household,
+                    :children_in_household
+      users.boolean :permission_to_email, :permission_to_text
+      users.date :date_of_birth
+      users.string :identification_code, null: false
 
-    add_index :users, :id_code, unique: true
+      users.index :identification_code, unique: true
+    end
   end
 end

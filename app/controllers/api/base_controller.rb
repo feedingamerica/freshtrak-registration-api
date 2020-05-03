@@ -1,35 +1,38 @@
-class Api::BaseController < ApplicationController
-  before_action :authenticate_user!
+# frozen_string_literal: true
 
-  private
+module Api
+  # Base controller for api namespace
+  class BaseController < ApplicationController
+    before_action :authenticate_user!
 
-  def authenticate_user!
-    return if current_authentication?
+    private
 
-    render json: { error: 'invalid_auth' }, status: :unauthorized
-  end
+    attr_reader :current_user
 
-  def current_authentication?
-    auth_header = request.headers['authorization']
+    def authenticate_user!
+      return if current_authentication?
 
-    return false if auth_header.blank?
+      render json: { error: 'invalid_auth' }, status: :unauthorized
+    end
 
-    token = auth_header.split(/\s+/)
+    def current_authentication?
+      auth_header = request.headers['authorization']
 
-    return false unless token.first == 'Bearer'
+      return false if auth_header.blank?
 
-    auth_token = token.last
+      token = auth_header.split(/\s+/)
 
-    authenticate_token(auth_token)
-  end
+      return false unless token.first == 'Bearer'
 
-  def authenticate_token(token)
-    auth = Authentication.authenticate_with_token(token)
-    @current_user = auth&.user
-    auth
-  end
+      auth_token = token.last
 
-  def current_user
-    @current_user
+      authenticate_token(auth_token)
+    end
+
+    def authenticate_token(token)
+      auth = Authentication.authenticate_with_token(token)
+      @current_user = auth&.user
+      auth
+    end
   end
 end

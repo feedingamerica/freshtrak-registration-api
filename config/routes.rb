@@ -3,8 +3,8 @@
 Jets.application.routes.draw do
   namespace :api do
     resources :guest_authentications, only: :create
-    resources :reservations, only: [:index, :show, :create, :delete]
-    resource :user, only: [:show, :update]
+    resources :reservations, only: %i[index show create delete]
+    resource :user, only: %i[show update]
   end
 
   root 'jets/public#show'
