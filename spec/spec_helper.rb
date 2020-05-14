@@ -16,6 +16,7 @@ end
 Jets.boot
 
 require 'jets/spec_helpers'
+require_relative 'spec_helpers/auth_helper'
 
 module Helpers
   def payload(name)
@@ -25,4 +26,5 @@ end
 
 RSpec.configure do |c|
   c.include Helpers
+  c.include AuthHelper
 end

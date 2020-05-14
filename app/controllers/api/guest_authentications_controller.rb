@@ -2,8 +2,7 @@
 
 module Api
   # Create a temporary guest user and authentication
-  class GuestAuthenticationsController < Api::BaseController
-    skip_before_action :authenticate_user!
+  class GuestAuthenticationsController < ApplicationController
     before_action :set_guest_user
 
     # POST /api/guest_authentications
