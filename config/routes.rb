@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 Jets.application.routes.draw do
+  namespace :api do
+    resources :households
+  end
+
+  #Default homepage. This should be replaced.
   root 'jets/public#show'
 
   # The jets/public#show controller can serve static utf8
