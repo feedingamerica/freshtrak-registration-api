@@ -8,17 +8,17 @@ describe Api::UsersController, type: :controller do
       sign_in_api(user)
     end
 
-    it 'should show the logged in user' do
+    it 'shows the logged in user' do
       get '/api/user'
 
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body)).to eq(user.as_json)
     end
 
-    it 'should update the logged in user' do
+    it 'updates the logged in user' do
       params = { first_name: 'John', middle_name: 'Jim', last_name: 'Smith',
                  suffix: 'Jr', date_of_birth: '01/01/1980', gender: 'Male',
-                 phone: '6145551234', permission_to_text: true, email: 'j@s.com',
+                 phone: '6145551234', permission_to_text: true, email: 'j@s.co',
                  permission_to_email: false, address_line_1: '123 Main St',
                  address_line_2: '#6', city: 'Columbus', state: 'Oh',
                  zip_code: '43201', license_plate: 'ABC123',
@@ -40,17 +40,15 @@ describe Api::UsersController, type: :controller do
       end
     end
 
-    it 'should respond with unprocessible_entity if the update fails' do
-      allow_any_instance_of(User).to receive(:update).and_return(false)
-
-      put '/api/user', user: { first_name: 'John' }
+    it 'responds with unprocessible_entity if the update fails' do
+      put '/api/user', user: { phone: 'oops' }
 
       expect(response.status).to eq(422)
     end
   end
 
   context 'without authenticated requests' do
-    it 'should respond with unauthorized' do
+    it 'responds with unauthorized' do
       get '/api/user'
       expect(response.status).to eq(401)
 

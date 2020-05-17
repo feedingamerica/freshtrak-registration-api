@@ -7,14 +7,18 @@ module Api
 
     # GET /api/reservations
     def index
-      @reservations = reservation.where(user_id: current_user.id)
+      @reservations = Reservation.where(user_id: current_user.id)
 
       render json: @reservations
     end
 
     # GET /api/reservations/1
     def show
-      render json: @reservation
+      if @reservation
+        render json: @reservation
+      else
+        render json: {}, status: :not_found
+      end
     end
 
     # POST /api/reservations
@@ -34,8 +38,11 @@ module Api
 
     # DELETE /api/reservations/1
     def delete
-      @reservation.destroy
-      render json: { deleted: true }
+      if @reservation&.destroy
+        render json: { deleted: true }
+      else
+        render json: {}, status: :forbidden
+      end
     end
 
     private

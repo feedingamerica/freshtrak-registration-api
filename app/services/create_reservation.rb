@@ -40,7 +40,7 @@ class CreateReservation
   end
 
   def event_is_at_capacity?
-    event_is_at_capacity = event_capacity >= event_reservation.count
+    event_is_at_capacity = event_reservations.count >= event_capacity
 
     if event_is_at_capacity
       reservation.errors.add(:event_date_id, 'is at capacity')
