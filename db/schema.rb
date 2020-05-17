@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2020_05_01_040916) do
 
   create_table "reservations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.integer "event_date_id"
+    t.integer "event_date_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["event_date_id"], name: "index_reservations_on_event_date_id"
