@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 Jets.application.routes.draw do
+  resources :guest_authentications, only: :create
+
   namespace :api do
-    resources :guest_authentications, only: :create
     resources :reservations, only: %i[index show create delete]
     resource :user, only: %i[show update]
   end
