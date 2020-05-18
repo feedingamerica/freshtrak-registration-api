@@ -13,7 +13,8 @@ class User < ApplicationRecord
 
   before_validation :set_identification_code, on: :create
 
-  validates :identification_code, presence: true, uniqueness: true
+  validates :identification_code, presence: true,
+    uniqueness: { case_sensitive: true }
   validates :phone, format: { with: /\d{10}/ }, allow_blank: true
 
   private
