@@ -21,7 +21,7 @@ class User < ApplicationRecord
 
   def set_identification_code
     loop do
-      self.identification_code = SecureRandom.generate_code(6)
+      self.identification_code = SafeRandom.generate_code(6)
 
       break unless User.find_by(identification_code: identification_code)
     end

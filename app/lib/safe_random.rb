@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'securerandom'
-
-# Ruby StdLib SecureRandom
-module SecureRandom
+# Generates codes of set length with limited characters
+class SafeRandom
   # Use only lowercase letters to make it easy for users
   #   entering codes on smart phones
   # Exclude letters that could result in offensive codes
@@ -17,8 +15,8 @@ module SecureRandom
   # @return [String] the generated random code
   #
   # @example Generate a code
-  #   SecureRandom.generate_code                   # => "nhrpwkpyyydjdpmf"
-  #   SecureRandom.generate_code(4, ['X','Y','Z']) # => "YYXZ"
+  #   SafeRandom.generate_code                   # => "nhrpwkpyyydjdpmf"
+  #   SafeRandom.generate_code(4, ['X','Y','Z']) # => "YYXZ"
   #
   def self.generate_code(len = 16, charset = SAFE_ALPHABET)
     charset_size = charset.size

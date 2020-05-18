@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 describe User, type: :model do
-  let(:user) { User.create(user_type: :guest) }
+  let(:user) { described_class.create(user_type: :guest) }
 
   it 'sets an unique identification code' do
     expect(user.identification_code).not_to be_blank
 
-    new_user = User.new(user_type: :guest)
+    new_user = described_class.new(user_type: :guest)
     new_user.identification_code = user.identification_code
 
     expect(new_user.save).to be_truthy
