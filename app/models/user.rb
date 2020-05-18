@@ -15,7 +15,7 @@ class User < ApplicationRecord
 
   validates :identification_code, presence: true,
                                   uniqueness: { case_sensitive: true }
-  validates :phone, format: { with: /\d{10}/ }, allow_blank: true
+  validates :phone, format: { with: /\A\d{10}\z/ }, allow_blank: true
 
   private
 
