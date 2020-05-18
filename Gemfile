@@ -31,4 +31,5 @@ group :test do
   gem 'rspec'
   gem 'simplecov', '~> 0.18.5', require: false
   gem 'simplecov-cobertura', '~> 1.3', require: false
+  gem 'timecop', '~> 0.9.1'
 end
