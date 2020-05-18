@@ -29,4 +29,6 @@ group :test do
   # "irb: warn: can't alias context from irb_context warning"
   # when starting jets console
   gem 'rspec'
+  gem 'simplecov', '~> 0.18.5', require: false
+  gem 'simplecov-cobertura', '~> 1.3', require: false
 end
