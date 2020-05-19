@@ -1,4 +1,4 @@
-# Pantry Finder API
+# Freshtrak Registration API
 Public API that exposes select tables for the Freshtrak pre-registration process.
 
 Built and deployed using the [Ruby on Jets](https://rubyonjets.com/) framework
