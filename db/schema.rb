@@ -12,6 +12,21 @@
 
 ActiveRecord::Schema.define(version: 2020_05_19_161015) do
 
+  create_table "household_addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.string "address_line_1"
+    t.string "address_line_2"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
+    t.string "zip_4"
+    t.integer "added_by"
+    t.integer "last_updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["household_id"], name: "index_household_addresses_on_household_id", unique: true
+  end
+
   create_table "households", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "household_number"
     t.string "name"
@@ -21,4 +36,5 @@ ActiveRecord::Schema.define(version: 2020_05_19_161015) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "household_addresses", "households"
 end

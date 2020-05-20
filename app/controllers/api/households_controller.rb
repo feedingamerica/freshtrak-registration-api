@@ -18,9 +18,8 @@ module Api
 
         # POST /households
         def create
-            @household = Household.new(household_params)
-            @household.save
-            render json: @household
+            @household = Household.create(household_params)
+            render json: @household #{"received": household_params }
         end
 
         # PUT /households/1
@@ -44,10 +43,11 @@ module Api
         end
         
         # The following requires certain parameters be sent when making requests
-        # to this controller.
+        # to this controller. Nested models must have "_attributes" appended to the model name
+        # in the "permit" as well as the payload to the controller.
         def household_params
-            params.require(:household).permit(:household_number, :name,
-                household_address_attributes: [:address_line_1, :id, :_destroy])
+            params.require(:household).permit(:household_number, :name, 
+                address_attributes: [:address_line_1, :address_line_2, :city, :state, :zip_code, :zip_4])
         end
     end
 end
