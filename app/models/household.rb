@@ -8,10 +8,10 @@ class Household < ApplicationRecord
     # foreign key relationships with other tables.
     #self.primary_key = 'household_id'
 
-    # Determines table relationships, "inverse_of" defines a two-way relation
-    belongs_to :household_members, foreign_key: :id, inverse_of: :households
-    belongs_to :household_addresses, foreign_key: :id, inverse_of: :households
-    belongs_to :household_event_registrations, foreign_key: :id, inverse_of: :households
+    # Determines table relationships.
+    has_one :household_address
+    accepts_nested_attributes_for :household_address, :allow_destroy => true
+    validates :name, :household_number, :presence => true
 
     # Sets a scope for all operations on the model.
     # default_scope { active } 

@@ -46,7 +46,8 @@ module Api
         # The following requires certain parameters be sent when making requests
         # to this controller.
         def household_params
-            params.require(:household).permit(:household_number, :name, :added_by, :last_updated_by)
+            params.require(:household).permit(:household_number, :name,
+                household_address_attributes: [:address_line_1, :id, :_destroy])
         end
     end
 end
