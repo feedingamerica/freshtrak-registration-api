@@ -2,16 +2,13 @@
 
 # A collection of family members / possible users
 class Household < ApplicationRecord
-    self.table_name = 'households'
-    # Active Record implicitly creates the primary key as 'id.' We can alias with
-    # the following line. Be sure to use the alias as a primary key when making
-    # foreign key relationships with other tables.
-    #self.primary_key = 'household_id'
+    # Active Record implicitly creates the primary key as 'id.' 
 
-    # Determines table relationships.
-    has_one :household_address
-    accepts_nested_attributes_for :household_address, :allow_destroy => true
-    validates :name, :household_number, :presence => true
+    # Determines table relationships. We can alias household_address -> address
+    has_one :address, class_name: "HouseholdAddress"
+    # Allows the household controller to create a household_address record when supplied
+    # in the payload.
+    accepts_nested_attributes_for :address
 
     # Sets a scope for all operations on the model.
     # default_scope { active } 
