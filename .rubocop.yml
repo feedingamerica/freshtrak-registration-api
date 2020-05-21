@@ -14,13 +14,19 @@ Lint/StructNewOverride:
 Metrics/AbcSize:
   Exclude:
     - 'spec/**/*'
+    - 'db/migrate/*'
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
+    - 'db/migrate/*'
 Metrics/MethodLength:
   Exclude:
     - 'spec/**/*'
+    - 'db/migrate/*'
 Rails/Date:
+  # TODO: figure out how to configure ActiveSupport::TimeZone without rails
+  Enabled: false
+Rails/TimeZone:
   # TODO: figure out how to configure ActiveSupport::TimeZone without rails
   Enabled: false
 Rails/HttpPositionalArguments:
@@ -30,7 +36,7 @@ RSpec/ExampleLength:
   Exclude:
     - 'spec/**/*'
 RSpec/MultipleExpectations:
-  Max: 4
+  Max: 5
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'bin/*'
