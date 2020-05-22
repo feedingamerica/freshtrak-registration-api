@@ -2,6 +2,9 @@
 
 source 'https://rubygems.org'
 
+gem 'faraday', '~> 1.0'
+gem 'faraday_middleware', '~> 1.0'
+
 gem 'jets'
 
 # Include mysql2 gem if you are using ActiveRecord, remove next line

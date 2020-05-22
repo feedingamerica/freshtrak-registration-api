@@ -18,8 +18,18 @@ module Api
 
         # POST /households
         def create
-            @household = Household.create(household_params)
-            render json: @household #{"received": household_params }
+            result = CreateHousehold.new(
+                household_name: household_params[:household_name],
+                household_number: household_params[:household_number],
+                address: household_params[:address_attributes]
+            ).call
+            @household = result.household
+
+            if result.success?
+                render json: @household , status: :created
+            else
+                render json: @household.errors, status: :unprocessable_entity
+            end
         end
 
         # PUT /households/1
@@ -46,7 +56,7 @@ module Api
         # to this controller. Nested models must have "_attributes" appended to the model name
         # in the "permit" as well as the payload to the controller.
         def household_params
-            params.require(:household).permit(:household_number, :name, 
+            params.require(:household).permit(:household_number, :household_name, 
                 address_attributes: [:address_line_1, :address_line_2, :city, :state, :zip_code, :zip_4])
         end
     end

@@ -10,6 +10,9 @@ class Household < ApplicationRecord
     # in the payload.
     accepts_nested_attributes_for :address
 
+    # Validations for the model
+    validates :address, presence: true
+
     # Sets a scope for all operations on the model.
     # default_scope { active } 
     # scope :active, -> { where("household_number > ?", 0) }
