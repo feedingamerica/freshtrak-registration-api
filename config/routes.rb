@@ -1,20 +1,12 @@
 # frozen_string_literal: true
 
 Jets.application.routes.draw do
-
-  namespace :api do
-    resources :households
-  end
-
-  #Default homepage. This should be replaced.
-
   resources :guest_authentications, only: :create
 
   namespace :api do
     resources :reservations, only: %i[index show create delete]
     resource :user, only: %i[show update]
   end
-
 
   root 'jets/public#show'
 
