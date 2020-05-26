@@ -10,10 +10,18 @@ class Household < ApplicationRecord
     # in the payload.
     accepts_nested_attributes_for :address
 
+    before_validation :set_added_by, on: :create
+
     # Validations for the model
     validates :address, presence: true
 
     # Sets a scope for all operations on the model.
     # default_scope { active } 
     # scope :active, -> { where("household_number > ?", 0) }
+
+    private
+    def set_added_by
+        self.added_by = 0
+        self.last_updated_by = 0
+    end
 end

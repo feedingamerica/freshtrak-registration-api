@@ -7,21 +7,26 @@ module Api
         
         # GET /households
         def index
-            @household = Household.all
-            render json: @household
+            # Should get household by current user_id/member_id
+            render json: {"household":"0"}
         end
 
         # GET /households/1
         def show
-            render json: @household
+            if @household
+                render json: @household
+            else
+                render json: {}, status: :not_found
+            end
         end
 
         # POST /households
         def create
+            address = HouseholdAddress.new(household_params[:address_attributes])
             result = CreateHousehold.new(
                 household_name: household_params[:household_name],
                 household_number: household_params[:household_number],
-                address: household_params[:address_attributes]
+                address: address
             ).call
             @household = result.household
 
