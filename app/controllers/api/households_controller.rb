@@ -22,16 +22,8 @@ module Api
 
         # POST /households
         def create
-            address = HouseholdAddress.new(household_params[:address_attributes])
-            result = CreateHousehold.new(
-                household_name: household_params[:household_name],
-                household_number: household_params[:household_number],
-                address: address
-            ).call
-            @household = result.household
-
-            if result.success?
-                render json: @household , status: :created
+            if @household = Household.create(household_params)
+                render json: @household
             else
                 render json: @household.errors, status: :unprocessable_entity
             end
@@ -48,8 +40,11 @@ module Api
 
         # DELETE /households/1
         def delete
-            @household.destroy
-            render json: { deleted: true }
+            if @household.destroy
+                render json: { deleted: true }
+            else
+                render json: @household.errors, status: :unprocessable_entity
+            end
         end
 
         private
@@ -62,7 +57,7 @@ module Api
         # in the "permit" as well as the payload to the controller.
         def household_params
             params.require(:household).permit(:household_number, :household_name, 
-                address_attributes: [:address_line_1, :address_line_2, :city, :state, :zip_code, :zip_4])
+                address_attributes: [:id, :address_line_1, :address_line_2, :city, :state, :zip_code, :zip_4, :_destroy])
         end
     end
 end
