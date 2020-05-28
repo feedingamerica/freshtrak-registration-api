@@ -16,14 +16,16 @@ From the `freshtrak-registration-api` folder
 bundle install # Install dependencies
 ```
 
-## Local developmentUnit Tests
+## Local development
+
+Unit Tests
 ```bash
 bundle exec rspec
 ```
 
 Development server
 ```bash
-bundle exec jets server
+bundle exec jets server --port 4444
 ```
 
 Console
@@ -31,17 +33,16 @@ Console
 bundle exec jets console
 ```
 
-### Updating the schema file
+## Deployment
 
-From time to time, new tables or columns are added to the source database. The `db/schema.rb` file needs to be kept in sync when this happens. It's also nice to take a fresh dump of the db at that time to make local development easier.
-```bash
-DB_HOST=<rds_host> DB_USER=<user> DB_PASS=<password> DB_NAME=registration_api_development bundle exec jets db:schema:dump
+This project is deployed using the [jets cli](https://rubyonjets.com/docs/deploy/).
+Under the hood it creates nested [CloudFormation stacks](https://rubyonjets.com/docs/debugging/cloudformation/).
+The relevant configuration files are at `config/application.rb` and `config/environments/*`.
+Environment variables are set using the `.env.*` files.
+
 ```
-```bash
-rm ./setup/seed.sql.zip
-mysqldump -h <rds_host> -u <user> -p<password> registration_api_development > setup/seed.sql
-zip setup/seed.sql.zip setup/seed.sql
-rm setup/seed.sql
+AWS_PROFILE=<profile> AWS_REGION=us-east-2 JETS_ENV=<env> bundle exec jets db:migrate
+AWS_PROFILE=<profile> AWS_REGION=us-east-2 JETS_ENV=<env> bundle exec jets deploy
 ```
 
 ### Setting up on Windows OS
@@ -59,8 +60,11 @@ Visual Studio code that allows the user to run VS code using remote WSL.
  There is a known issue where MySQL will attempt to use an SHA2 Password Plugin. If an error regarding this is a blocker a work around can be found at the following web address.
   - https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded
 
+
 * Dependencies
 * Configuration
 * Database setup
 * How to run the test suite
 * Deployment instructions
+
+
