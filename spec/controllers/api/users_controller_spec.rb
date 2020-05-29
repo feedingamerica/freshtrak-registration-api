@@ -40,6 +40,25 @@ describe Api::UsersController, type: :controller do
       end
     end
 
+    it 'returns the user by ID' do
+      get "/api/user/#{user.id}"
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)).to eq(user.as_json)
+    end
+
+    it 'returns 404 when user id is invalid' do
+      get '/api/user/12345'
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'returns error message when user not found' do
+      get '/api/user/12345'
+
+      expect(JSON.parse(response.body)['message']).to eq('Couldn\'t find User')
+    end
+
     it 'responds with unprocessible_entity if the update fails' do
       put '/api/user', user: { phone: 'oops' }
 
@@ -49,6 +68,9 @@ describe Api::UsersController, type: :controller do
 
   context 'without authenticated requests' do
     it 'responds with unauthorized' do
+      get '/api/user/12345'
+      expect(response.status).to eq(401)
+
       get '/api/user'
       expect(response.status).to eq(401)
 

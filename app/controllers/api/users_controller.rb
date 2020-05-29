@@ -5,6 +5,14 @@ module Api
   #   handled as a singular resource
   #   where the user is inferred from the auth token
   class UsersController < Api::BaseController
+    rescue_from ActiveRecord::RecordNotFound, with: :missing_user
+
+    # GET /api/user/:id
+    def index
+      @user = User.find(params[:id])
+      render json: @user
+    end
+
     # GET /api/user
     def show
       render json: current_user
@@ -30,6 +38,10 @@ module Api
         :license_plate, :seniors_in_household, :adults_in_household,
         :children_in_household
       )
+    end
+
+    def missing_user
+      render json: { message: "Couldn't find User" }, status: 404
     end
   end
 end
