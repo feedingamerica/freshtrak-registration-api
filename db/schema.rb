@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_29_154241) do
+ActiveRecord::Schema.define(version: 2020_05_29_164254) do
 
   create_table "genders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "household_addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -33,6 +35,29 @@ ActiveRecord::Schema.define(version: 2020_05_29_154241) do
     t.index ["household_id"], name: "index_household_addresses_on_household_id", unique: true
   end
 
+  create_table "household_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.bigint "user_id"
+    t.bigint "suffix_id"
+    t.bigint "gender_id"
+    t.integer "household_member_number", null: false
+    t.string "first_name", null: false
+    t.string "middle_name"
+    t.string "last_name", null: false
+    t.datetime "date_of_birth", null: false
+    t.boolean "is_head_of_household", default: false
+    t.string "email", null: false
+    t.boolean "is_active_member", default: true
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["gender_id"], name: "index_household_members_on_gender_id", unique: true
+    t.index ["household_id"], name: "index_household_members_on_household_id", unique: true
+    t.index ["suffix_id"], name: "index_household_members_on_suffix_id", unique: true
+    t.index ["user_id"], name: "index_household_members_on_user_id", unique: true
+  end
+
   create_table "households", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "household_number", null: false
     t.string "household_name", null: false
@@ -46,6 +71,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_154241) do
     t.string "name", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_credentials", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -55,6 +82,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_154241) do
     t.datetime "expires_at"
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_infos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -69,6 +98,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_154241) do
     t.string "urls"
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -86,6 +117,10 @@ ActiveRecord::Schema.define(version: 2020_05_29_154241) do
   end
 
   add_foreign_key "household_addresses", "households"
+  add_foreign_key "household_members", "genders"
+  add_foreign_key "household_members", "households"
+  add_foreign_key "household_members", "suffixes"
+  add_foreign_key "household_members", "users"
   add_foreign_key "users", "user_credentials"
   add_foreign_key "users", "user_infos"
 end

@@ -4,6 +4,7 @@ class CreateSuffixes < ActiveRecord::Migration[6.0]
       t.string :name, null: false
       t.integer :added_by, null: false
       t.integer :last_updated_by, null: false
+      t.timestamps
     end
   end
 end
