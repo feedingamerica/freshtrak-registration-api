@@ -2,14 +2,14 @@
 
 # The address associated with a household
 class HouseholdAddress < ApplicationRecord
-    belongs_to :household
+  belongs_to :household
 
-    before_validation :set_added_by, on: :create
+  before_validation :set_added_by, on: :create
 
-    private
-    def set_added_by
-        self.added_by = 0
-        self.last_updated_by = 0
-    end
+  private
 
+  def set_added_by
+    self.added_by = 0
+    self.last_updated_by = 0
+  end
 end
