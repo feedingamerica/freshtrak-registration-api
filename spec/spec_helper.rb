@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require 'simplecov'
+SimpleCov.start
+require 'simplecov-cobertura'
+SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+
 ENV['JETS_TEST'] = '1'
 ENV['JETS_ENV'] ||= 'test'
 # Ensures aws api never called.
@@ -16,6 +21,7 @@ end
 Jets.boot
 
 require 'jets/spec_helpers'
+require_relative 'spec_helpers/auth_helper'
 
 module Helpers
   def payload(name)
@@ -25,4 +31,5 @@ end
 
 RSpec.configure do |c|
   c.include Helpers
+  c.include AuthHelper
 end

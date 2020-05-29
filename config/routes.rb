@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 Jets.application.routes.draw do
+  resources :guest_authentications, only: :create
+
   namespace :api do
+    resources :reservations, only: %i[index show create delete]
+    resource :user, only: %i[show update]
     resources :households
   end
 
-  #Default homepage. This should be replaced.
   root 'jets/public#show'
 
   # The jets/public#show controller can serve static utf8

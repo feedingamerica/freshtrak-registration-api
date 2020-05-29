@@ -2,10 +2,11 @@
 
 source 'https://rubygems.org'
 
+gem 'faraday', '~> 1.0'
+gem 'faraday_middleware', '~> 1.0'
+
 gem 'jets'
 
-# Include mysql2 gem if you are using ActiveRecord, remove next line
-# and config/database.yml file if you are not
 gem 'mysql2', '~> 0.5.2'
 
 # development and test groups are not bundled as part of the deployment
@@ -28,4 +29,7 @@ group :test do
   # "irb: warn: can't alias context from irb_context warning"
   # when starting jets console
   gem 'rspec'
+  gem 'simplecov', '~> 0.18.5', require: false
+  gem 'simplecov-cobertura', '~> 1.3', require: false
+  gem 'timecop', '~> 0.9.1'
 end

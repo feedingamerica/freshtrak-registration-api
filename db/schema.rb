@@ -12,6 +12,16 @@
 
 ActiveRecord::Schema.define(version: 2020_05_19_161015) do
 
+  create_table "authentications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["token"], name: "index_authentications_on_token", unique: true
+    t.index ["user_id"], name: "index_authentications_on_user_id"
+  end
+
   create_table "household_addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "household_id"
     t.string "address_line_1"
@@ -36,5 +46,43 @@ ActiveRecord::Schema.define(version: 2020_05_19_161015) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "reservations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "event_date_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["event_date_id"], name: "index_reservations_on_event_date_id"
+    t.index ["user_id"], name: "index_reservations_on_user_id"
+  end
+
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "last_name"
+    t.string "suffix"
+    t.string "gender"
+    t.string "phone"
+    t.string "email"
+    t.string "address_line_1"
+    t.string "address_line_2"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
+    t.string "license_plate"
+    t.integer "seniors_in_household"
+    t.integer "adults_in_household"
+    t.integer "children_in_household"
+    t.boolean "permission_to_email"
+    t.boolean "permission_to_text"
+    t.date "date_of_birth"
+    t.string "identification_code", null: false
+    t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
+  end
+
+  add_foreign_key "authentications", "users"
   add_foreign_key "household_addresses", "households"
+  add_foreign_key "reservations", "users"
 end
