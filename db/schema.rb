@@ -81,9 +81,11 @@ ActiveRecord::Schema.define(version: 2020_05_29_154241) do
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_credential_id"], name: "index_users_on_user_credential_id"
-    t.index ["user_info_id"], name: "index_users_on_user_info_id"
+    t.index ["user_credential_id"], name: "index_users_on_user_credential_id", unique: true
+    t.index ["user_info_id"], name: "index_users_on_user_info_id", unique: true
   end
 
   add_foreign_key "household_addresses", "households"
+  add_foreign_key "users", "user_credentials"
+  add_foreign_key "users", "user_infos"
 end
