@@ -2,12 +2,13 @@
 
 module Api
   # Exposes the Household data
-  class HouseholdsController < ApplicationController
+  class HouseholdsController < Api::BaseController
     before_action :set_household, only: %i[show update delete]
     # GET /households
     def index
       # Should get household by current user_id/member_id
-      render json: { 'household': '0' }
+      #@household = Household.find(member_id: current_user.member_id)
+      render json: {}
     end
 
     # GET /households/1
@@ -21,7 +22,9 @@ module Api
 
     # POST /households
     def create
-      if @household == Household.create(household_params)
+      @household = Household.new(household_params)
+      set_added_by
+      if @household.save
         render json: @household
       else
         render json: @household.errors, status: :unprocessable_entity
@@ -48,22 +51,37 @@ module Api
 
     private
 
+    def set_added_by
+      @household.added_by = current_user.id
+      @household.last_updated_by = current_user.id
+      @household.address.added_by = current_user.id
+      @household.address.last_updated_by = current_user.id
+    end
+
     def set_household
-      @household = Household.find(params[:id])
+      @household = Household.find_by(
+        id: params[:id], member_id: current_user.member_id
+      )
     end
 
     # The following requires certain parameters be sent when making requests
     # to this controller. Nested models must have "_attributes" appended to
     # the model name in the "permit" as well as the payload to the controller.
     def household_params
-      params.require(:household).permit(:household_number, :household_name,
-                                        address_attributes: %i[id address_line_1
-                                                               address_line_2
+      params.require(:household).permit(:number, :name,
+                                        address_attributes: %i[id line_1
+                                                               line_2
                                                                city
                                                                state
                                                                zip_code
                                                                zip_4
-                                                               _destroy])
+                                                               _destroy],
+                                        member_attritbues: %i[id first_name
+                                                              middle_name
+                                                              last_name
+                                                              date_of_birth
+                                                              is_head_of_household
+                                                              email])
     end
   end
 end

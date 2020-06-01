@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_161015) do
+ActiveRecord::Schema.define(version: 2020_06_01_150614) do
+
+  create_table "addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.string "line_1", null: false
+    t.string "line_2"
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "zip_code", null: false
+    t.string "zip_4"
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["household_id"], name: "index_addresses_on_household_id", unique: true
+  end
 
   create_table "authentications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -22,28 +37,29 @@ ActiveRecord::Schema.define(version: 2020_05_19_161015) do
     t.index ["user_id"], name: "index_authentications_on_user_id"
   end
 
-  create_table "household_addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "household_id"
-    t.string "address_line_1", null: false
-    t.string "address_line_2", null: false
-    t.string "city", null: false
-    t.string "state", null: false
-    t.string "zip_code", null: false
-    t.string "zip_4", null: false
+  create_table "households", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "number", null: false
+    t.string "name", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["household_id"], name: "index_household_addresses_on_household_id", unique: true
   end
 
-  create_table "households", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "household_number", null: false
-    t.string "household_name", null: false
-    t.integer "added_by", null: false
-    t.integer "last_updated_by", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+  create_table "members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.bigint "user_id"
+    t.string "first_name", null: false
+    t.string "middle_name"
+    t.string "last_name", null: false
+    t.datetime "date_of_birth", null: false
+    t.boolean "is_head_of_household", default: false, null: false
+    t.string "email", null: false
+    t.boolean "is_active", default: true, null: false
+    t.string "added_by", null: false
+    t.datetime "last_update"
+    t.index ["household_id"], name: "index_members_on_household_id"
+    t.index ["user_id"], name: "index_members_on_user_id"
   end
 
   create_table "reservations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -82,7 +98,9 @@ ActiveRecord::Schema.define(version: 2020_05_19_161015) do
     t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
   end
 
+  add_foreign_key "addresses", "households"
   add_foreign_key "authentications", "users"
-  add_foreign_key "household_addresses", "households"
+  add_foreign_key "members", "households"
+  add_foreign_key "members", "users"
   add_foreign_key "reservations", "users"
 end
