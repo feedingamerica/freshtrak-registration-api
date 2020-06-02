@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_01_150614) do
+ActiveRecord::Schema.define(version: 2020_06_02_190001) do
 
   create_table "addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "household_id"
@@ -27,6 +27,27 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
     t.index ["household_id"], name: "index_addresses_on_household_id", unique: true
   end
 
+  create_table "alt_id_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description"
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "alt_ids", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "alt_id_type_id", null: false
+    t.bigint "member_id", null: false
+    t.string "value", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["alt_id_type_id"], name: "index_alt_ids_on_alt_id_type_id"
+    t.index ["member_id"], name: "index_alt_ids_on_member_id"
+  end
+
   create_table "authentications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "token", null: false
@@ -37,8 +58,100 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
     t.index ["user_id"], name: "index_authentications_on_user_id"
   end
 
+  create_table "carrier_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "communication_preference_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description"
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "communication_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "member_id", null: false
+    t.bigint "communication_preference_type_id", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["communication_preference_type_id"], name: "fk_communication_pref_type"
+    t.index ["member_id", "communication_preference_type_id"], name: "uq_communication_pref_member", unique: true
+    t.index ["member_id"], name: "index_communication_preferences_on_member_id"
+  end
+
+  create_table "credentials", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "token", null: false
+    t.string "secret"
+    t.boolean "expires"
+    t.datetime "expires_at"
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_credentials_on_user_id", unique: true
+  end
+
+  create_table "emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "location_type_id", null: false
+    t.bigint "member_id", null: false
+    t.string "email", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["location_type_id"], name: "index_emails_on_location_type_id"
+    t.index ["member_id"], name: "index_emails_on_member_id"
+  end
+
+  create_table "event_registration_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "event_registration_id"
+    t.bigint "member_id"
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["event_registration_id"], name: "index_event_registration_members_on_event_registration_id", unique: true
+    t.index ["member_id"], name: "index_event_registration_members_on_member_id", unique: true
+  end
+
+  create_table "event_registrations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.integer "event_slot_id", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["household_id"], name: "index_event_registrations_on_household_id", unique: true
+  end
+
+  create_table "genders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "households", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "number", null: false
+    t.string "name", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "location_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
@@ -58,8 +171,26 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
     t.boolean "is_active", default: true, null: false
     t.string "added_by", null: false
     t.datetime "last_update"
+    t.bigint "gender_id", null: false
+    t.bigint "suffix_id"
+    t.index ["gender_id"], name: "index_members_on_gender_id"
     t.index ["household_id"], name: "index_members_on_household_id"
+    t.index ["suffix_id"], name: "index_members_on_suffix_id"
     t.index ["user_id"], name: "index_members_on_user_id"
+  end
+
+  create_table "phone_numbers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "location_type_id", null: false
+    t.bigint "carrier_type_id"
+    t.bigint "member_id", null: false
+    t.string "phone_number", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["carrier_type_id"], name: "index_phone_numbers_on_carrier_type_id"
+    t.index ["location_type_id"], name: "index_phone_numbers_on_location_type_id"
+    t.index ["member_id"], name: "index_phone_numbers_on_member_id"
   end
 
   create_table "reservations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -69,6 +200,32 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["event_date_id"], name: "index_reservations_on_event_date_id"
     t.index ["user_id"], name: "index_reservations_on_user_id"
+  end
+
+  create_table "suffixes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "user_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "location"
+    t.string "description"
+    t.string "image"
+    t.string "phone"
+    t.string "urls"
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_user_details_on_user_id"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -95,12 +252,34 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
     t.boolean "permission_to_text"
     t.date "date_of_birth"
     t.string "identification_code", null: false
+    t.bigint "credential_id", null: false
+    t.bigint "user_detail_id", null: false
+    t.index ["credential_id"], name: "index_users_on_credential_id"
     t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
+    t.index ["user_detail_id"], name: "index_users_on_user_detail_id"
   end
 
   add_foreign_key "addresses", "households"
+  add_foreign_key "alt_ids", "alt_id_types"
+  add_foreign_key "alt_ids", "members"
   add_foreign_key "authentications", "users"
+  add_foreign_key "communication_preferences", "communication_preference_types"
+  add_foreign_key "communication_preferences", "members"
+  add_foreign_key "credentials", "users"
+  add_foreign_key "emails", "location_types"
+  add_foreign_key "emails", "members"
+  add_foreign_key "event_registration_members", "event_registrations"
+  add_foreign_key "event_registration_members", "members"
+  add_foreign_key "event_registrations", "households"
+  add_foreign_key "members", "genders"
   add_foreign_key "members", "households"
+  add_foreign_key "members", "suffixes"
   add_foreign_key "members", "users"
+  add_foreign_key "phone_numbers", "carrier_types"
+  add_foreign_key "phone_numbers", "location_types"
+  add_foreign_key "phone_numbers", "members"
   add_foreign_key "reservations", "users"
+  add_foreign_key "user_details", "users"
+  add_foreign_key "users", "credentials"
+  add_foreign_key "users", "user_details"
 end
