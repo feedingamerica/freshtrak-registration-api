@@ -49,15 +49,17 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
   create_table "members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "household_id"
     t.bigint "user_id"
+    t.integer "number"
     t.string "first_name", null: false
     t.string "middle_name"
     t.string "last_name", null: false
-    t.datetime "date_of_birth", null: false
+    t.date "date_of_birth", null: false
     t.boolean "is_head_of_household", default: false, null: false
     t.string "email", null: false
     t.boolean "is_active", default: true, null: false
     t.string "added_by", null: false
-    t.datetime "last_update"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["household_id"], name: "index_members_on_household_id"
     t.index ["user_id"], name: "index_members_on_user_id"
   end
