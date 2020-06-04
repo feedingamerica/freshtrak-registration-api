@@ -5,11 +5,12 @@ module Api
   class HouseholdsController < Api::BaseController
     before_action :set_household, only: %i[show update delete]
     # GET /households
-    def index
-      # Should get household by current user_id/member_id
-      @household = Household.joins(:members).where(members: { id: current_user.member.id })
-      render json: @household
-    end
+    # def index
+    #   # Should get household by current user_id/member_id
+    #   @household = Household.joins(:members)
+    #   .where(members: { id: current_user.member.id })
+    #   render json: @household
+    # end
 
     # GET /households/1
     def show
@@ -22,31 +23,14 @@ module Api
 
     # POST /households
     def create
-      address = Address.new(household_params[:address_attributes])
-      result = CreateHousehold.new(
-        name: household_params[:name],
-        number: household_params[:number],
-        address: address,
-        current_user: current_user
-      ).call
-      @household = result.household
-
-      if result.success?
-        render json: @household, status: :created
+      @household = Household.new(household_params)
+      set_added_by
+      if @household.save
+        render json: @household
       else
         render json: @household.errors, status: :unprocessable_entity
       end
     end
-
-    # def create
-    #   @household = Household.new(household_params)
-    #   set_added_by
-    #   if @household.save
-    #     render json: @household
-    #   else
-    #     render json: @household.errors, status: :unprocessable_entity
-    #   end
-    # end
 
     # PUT /households/1
     def update
@@ -68,21 +52,15 @@ module Api
 
     private
 
-    # def set_added_by
-    #   @household.added_by = current_user.id
-    #   @household.last_updated_by = current_user.id
-    #   @household.address.added_by = current_user.id
-    #   @household.address.last_updated_by = current_user.id
-    #   @household.members[0].user_id = current_user.id
-    #   @household.members.each { |member|
-    #     member.added_by = current_user.id
-    #   }
-    # end
+    def set_added_by
+      @household.added_by = current_user.id
+      @household.last_updated_by = current_user.id
+      @household.address.added_by = current_user.id
+      @household.address.last_updated_by = current_user.id
+    end
 
     def set_household
-      @household = Household.find_by(
-        id: params[:id], member_id: current_user.member_id
-      )
+      @household = Household.find(params[:id])
     end
 
     # The following requires certain parameters be sent when making requests
@@ -96,14 +74,7 @@ module Api
                                                                state
                                                                zip_code
                                                                zip_4
-                                                               _destroy],
-                                        members_attributes: %i[id first_name
-                                                              middle_name
-                                                              last_name
-                                                              date_of_birth
-                                                              is_head_of_household
-                                                              email
-                                                              _destroy])
+                                                               _destroy])
     end
   end
 end

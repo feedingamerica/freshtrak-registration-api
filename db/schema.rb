@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_01_150614) do
+ActiveRecord::Schema.define(version: 2020_05_19_161015) do
 
   create_table "addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "household_id"
@@ -44,24 +44,6 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "household_id"
-    t.bigint "user_id"
-    t.integer "number"
-    t.string "first_name", null: false
-    t.string "middle_name"
-    t.string "last_name", null: false
-    t.date "date_of_birth", null: false
-    t.boolean "is_head_of_household", default: false, null: false
-    t.string "email", null: false
-    t.boolean "is_active", default: true, null: false
-    t.string "added_by", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["household_id"], name: "index_members_on_household_id"
-    t.index ["user_id"], name: "index_members_on_user_id"
   end
 
   create_table "reservations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -102,7 +84,5 @@ ActiveRecord::Schema.define(version: 2020_06_01_150614) do
 
   add_foreign_key "addresses", "households"
   add_foreign_key "authentications", "users"
-  add_foreign_key "members", "households"
-  add_foreign_key "members", "users"
   add_foreign_key "reservations", "users"
 end
