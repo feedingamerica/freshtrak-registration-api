@@ -12,6 +12,8 @@ class Household < ApplicationRecord
 
   # Validations for the model
   validates :address, presence: true
+  validates :name, presence: true
+  validates :number, presence: true
 
   # Sets a scope for all operations on the model.
   # default_scope { active }

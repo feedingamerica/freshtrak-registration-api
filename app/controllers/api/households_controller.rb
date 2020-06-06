@@ -55,12 +55,14 @@ module Api
     def set_added_by
       @household.added_by = current_user.id
       @household.last_updated_by = current_user.id
+      return unless @household.address
+
       @household.address.added_by = current_user.id
       @household.address.last_updated_by = current_user.id
     end
 
     def set_household
-      @household = Household.find(params[:id])
+      @household = Household.find_by(id: params[:id])
     end
 
     # The following requires certain parameters be sent when making requests
