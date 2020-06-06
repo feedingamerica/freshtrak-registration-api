@@ -20,6 +20,10 @@ group :development, :test do
   gem 'rubocop-rails', '~> 2.5', require: false
   gem 'rubocop-rspec', '~> 1.38', require: false
   gem 'shotgun'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-remote'
+  gem 'pry-stack_explorer'
 end
 
 group :test do
