@@ -17,9 +17,6 @@ describe User, type: :model do
     user.phone = '614555'
     expect(user).not_to be_valid
 
-    user.phone = '614-555-1234'
-    expect(user).not_to be_valid
-
     user.phone = '16145551234'
     expect(user).not_to be_valid
 
@@ -27,6 +24,11 @@ describe User, type: :model do
     expect(user).not_to be_valid
 
     user.phone = '6145551234'
+    expect(user).to be_valid
+  end
+
+  it 'strips non-digit chars from phone' do
+    user.phone = '614-555-1234'
     expect(user).to be_valid
   end
 end
