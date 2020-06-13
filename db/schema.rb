@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_02_190001) do
+ActiveRecord::Schema.define(version: 2020_06_13_182826) do
 
   create_table "addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "household_id"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 2020_06_02_190001) do
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_emails_on_email", unique: true
     t.index ["location_type_id"], name: "index_emails_on_location_type_id"
     t.index ["member_id"], name: "index_emails_on_member_id"
   end
@@ -131,7 +132,17 @@ ActiveRecord::Schema.define(version: 2020_06_02_190001) do
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "event_status_id", null: false
+    t.index ["event_status_id"], name: "index_event_registrations_on_event_status_id"
     t.index ["household_id"], name: "index_event_registrations_on_household_id", unique: true
+  end
+
+  create_table "event_statuses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "genders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -159,10 +170,27 @@ ActiveRecord::Schema.define(version: 2020_06_02_190001) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.bigint "user_id"
+    t.integer "number"
+    t.string "first_name", null: false
+    t.string "middle_name"
+    t.string "last_name", null: false
+    t.date "date_of_birth", null: false
+    t.boolean "is_head_of_household", default: false, null: false
+    t.boolean "is_active", default: true, null: false
+    t.string "added_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.bigint "gender_id", null: false
     t.bigint "suffix_id"
     t.index ["gender_id"], name: "index_members_on_gender_id"
+    t.index ["household_id"], name: "index_members_on_household_id"
     t.index ["suffix_id"], name: "index_members_on_suffix_id"
+    t.index ["user_id"], name: "index_members_on_user_id"
+  end
+
   create_table "phone_numbers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "location_type_id", null: false
     t.bigint "carrier_type_id"
@@ -254,9 +282,12 @@ ActiveRecord::Schema.define(version: 2020_06_02_190001) do
   add_foreign_key "emails", "members"
   add_foreign_key "event_registration_members", "event_registrations"
   add_foreign_key "event_registration_members", "members"
+  add_foreign_key "event_registrations", "event_statuses"
   add_foreign_key "event_registrations", "households"
   add_foreign_key "members", "genders"
+  add_foreign_key "members", "households"
   add_foreign_key "members", "suffixes"
+  add_foreign_key "members", "users"
   add_foreign_key "phone_numbers", "carrier_types"
   add_foreign_key "phone_numbers", "location_types"
   add_foreign_key "phone_numbers", "members"
