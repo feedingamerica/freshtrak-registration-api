@@ -5,11 +5,12 @@ module Api
   class HouseholdsController < Api::BaseController
     before_action :set_household, only: %i[show update delete]
     # GET /households
-    def index
-      # Should get household by current user_id/member_id
-      #@household = Household.find(member_id: current_user.member_id)
-      render json: {}
-    end
+    # def index
+    #   # Should get household by current user_id/member_id
+    #   @household = Household.joins(:members)
+    #   .where(members: { id: current_user.member.id })
+    #   render json: @household
+    # end
 
     # GET /households/1
     def show
@@ -54,14 +55,14 @@ module Api
     def set_added_by
       @household.added_by = current_user.id
       @household.last_updated_by = current_user.id
+      return unless @household.address
+
       @household.address.added_by = current_user.id
       @household.address.last_updated_by = current_user.id
     end
 
     def set_household
-      @household = Household.find_by(
-        id: params[:id], member_id: current_user.member_id
-      )
+      @household = Household.find_by(id: params[:id])
     end
 
     # The following requires certain parameters be sent when making requests
@@ -75,13 +76,7 @@ module Api
                                                                state
                                                                zip_code
                                                                zip_4
-                                                               _destroy],
-                                        member_attritbues: %i[id first_name
-                                                              middle_name
-                                                              last_name
-                                                              date_of_birth
-                                                              is_head_of_household
-                                                              email])
+                                                               _destroy])
     end
   end
 end

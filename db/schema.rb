@@ -159,26 +159,10 @@ ActiveRecord::Schema.define(version: 2020_06_02_190001) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "household_id"
-    t.bigint "user_id"
-    t.string "first_name", null: false
-    t.string "middle_name"
-    t.string "last_name", null: false
-    t.datetime "date_of_birth", null: false
-    t.boolean "is_head_of_household", default: false, null: false
-    t.string "email", null: false
-    t.boolean "is_active", default: true, null: false
-    t.string "added_by", null: false
-    t.datetime "last_update"
     t.bigint "gender_id", null: false
     t.bigint "suffix_id"
     t.index ["gender_id"], name: "index_members_on_gender_id"
-    t.index ["household_id"], name: "index_members_on_household_id"
     t.index ["suffix_id"], name: "index_members_on_suffix_id"
-    t.index ["user_id"], name: "index_members_on_user_id"
-  end
-
   create_table "phone_numbers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "location_type_id", null: false
     t.bigint "carrier_type_id"
@@ -272,9 +256,7 @@ ActiveRecord::Schema.define(version: 2020_06_02_190001) do
   add_foreign_key "event_registration_members", "members"
   add_foreign_key "event_registrations", "households"
   add_foreign_key "members", "genders"
-  add_foreign_key "members", "households"
   add_foreign_key "members", "suffixes"
-  add_foreign_key "members", "users"
   add_foreign_key "phone_numbers", "carrier_types"
   add_foreign_key "phone_numbers", "location_types"
   add_foreign_key "phone_numbers", "members"
