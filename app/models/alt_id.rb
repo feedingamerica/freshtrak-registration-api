@@ -6,5 +6,5 @@ class AltId < ApplicationRecord
   belongs_to :alt_id_type
 
   validates :value, presence: true, length: { maximum: 100 }
-  validates :alt_id_type, presence: true
+  validates :alt_id_type_id, presence: true
 end
