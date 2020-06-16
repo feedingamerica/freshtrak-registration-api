@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Create Communication Preference Types table
 class CreateCommunicationPreferenceTypes < ActiveRecord::Migration[6.0]
   def change
     create_table :communication_preference_types do |t|

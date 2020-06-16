@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_13_182826) do
+ActiveRecord::Schema.define(version: 2020_06_16_190850) do
 
   create_table "addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "household_id"
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(version: 2020_06_13_182826) do
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "event_status_id", null: false
-    t.index ["event_status_id"], name: "index_event_registrations_on_event_status_id"
+    t.bigint "event_status_id"
+    t.index ["event_status_id"], name: "fk_rails_618ce10cb0"
     t.index ["household_id"], name: "index_event_registrations_on_household_id", unique: true
   end
 
@@ -183,11 +183,11 @@ ActiveRecord::Schema.define(version: 2020_06_13_182826) do
     t.string "added_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "gender_id", null: false
+    t.bigint "gender_id"
     t.bigint "suffix_id"
-    t.index ["gender_id"], name: "index_members_on_gender_id"
+    t.index ["gender_id"], name: "fk_rails_a1d4cdda3e"
     t.index ["household_id"], name: "index_members_on_household_id"
-    t.index ["suffix_id"], name: "index_members_on_suffix_id"
+    t.index ["suffix_id"], name: "fk_rails_515205f7ad"
     t.index ["user_id"], name: "index_members_on_user_id"
   end
 
@@ -264,11 +264,11 @@ ActiveRecord::Schema.define(version: 2020_06_13_182826) do
     t.boolean "permission_to_text"
     t.date "date_of_birth"
     t.string "identification_code", null: false
-    t.bigint "credential_id", null: false
-    t.bigint "user_detail_id", null: false
-    t.index ["credential_id"], name: "index_users_on_credential_id"
+    t.bigint "credential_id"
+    t.bigint "user_detail_id"
+    t.index ["credential_id"], name: "fk_rails_024dac10af"
     t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
-    t.index ["user_detail_id"], name: "index_users_on_user_detail_id"
+    t.index ["user_detail_id"], name: "fk_rails_5de4188fc5"
   end
 
   add_foreign_key "addresses", "households"

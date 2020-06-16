@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Create Alt Id Types table
 class CreateAltIdTypes < ActiveRecord::Migration[6.0]
   def change
     create_table :alt_id_types do |t|

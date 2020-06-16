@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 # Communication Preference for Household Member
 class CommunicationPreference < ApplicationRecord
   belongs_to :member, inverse_of: :communication_preference

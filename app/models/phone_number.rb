@@ -6,8 +6,8 @@ class PhoneNumber < ApplicationRecord
   belongs_to :location_type
   belongs_to :carrier_type
 
-  validates :phone_number, presence: true
+  validates :phone_number, presence: true,
+                           format: { with: /\A\d{10}\z/ }
   validates :location_type_id, presence: true
   validates :carrier_type_id, presence: true
-  validates :phone_number, format: { with: /\A\d{10}\z/ }
 end

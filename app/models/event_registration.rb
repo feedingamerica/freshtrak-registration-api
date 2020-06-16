@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 # Event Registrations for a Household
 class EventRegistration < ApplicationRecord
   belongs_to :household, inverse_of: :event_registrations

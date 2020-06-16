@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
+# Add User Details FK To User
 class AddUserDetailsToUser < ActiveRecord::Migration[6.0]
   def change
-    add_reference :users, :user_detail, foreign_key: true, null: false
+    add_column :users, :user_detail_id, :bigint
+    add_foreign_key :users, :user_details
   end
 end

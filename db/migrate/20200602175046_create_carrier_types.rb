@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Create Carrier Types table
 class CreateCarrierTypes < ActiveRecord::Migration[6.0]
   def change
     create_table :carrier_types do |t|

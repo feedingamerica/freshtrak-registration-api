@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Create Suffixes table
 class CreateSuffixes < ActiveRecord::Migration[6.0]
   def change
     create_table :suffixes do |t|

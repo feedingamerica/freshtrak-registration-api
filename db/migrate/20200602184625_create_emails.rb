@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Create Emails table
 class CreateEmails < ActiveRecord::Migration[6.0]
   def change
     create_table :emails do |t|
