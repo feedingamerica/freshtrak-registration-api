@@ -41,7 +41,7 @@ describe Api::UsersController, type: :controller do
     end
 
     it 'responds with unprocessible_entity if the update fails' do
-      put '/api/user', user: { phone: 'oops' }
+      put '/api/user', user: { phone: '111-111-1111-1' }
 
       expect(response.status).to eq(422)
     end

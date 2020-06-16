@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_one :user_detail, inverse_of: :user, dependent: :destroy
 
   before_validation :set_identification_code, on: :create
+  before_validation :clean_phone
 
   validates :identification_code, presence: true,
                                   uniqueness: { case_sensitive: true }
@@ -29,5 +30,11 @@ class User < ApplicationRecord
 
       break unless User.find_by(identification_code: identification_code)
     end
+  end
+
+  def clean_phone
+    return unless phone && phone_changed?
+
+    self.phone = phone.gsub(/\D/, '')
   end
 end
