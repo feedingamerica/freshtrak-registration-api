@@ -42,11 +42,15 @@ describe Api::ReservationsController, type: :controller do
 
   it 'creates a reservation' do
     event_date_id = (user.reservations.pluck(:event_date_id).max || 0) + 1
+    event_slot_id = (user.reservations.pluck(:event_slot_id).max || 0) + 1
     allow(pantry_finder_api).to receive(:event_date)
       .with(event_date_id.to_s).and_return(capacity: Float::INFINITY)
 
     expect do
-      post '/api/reservations', reservation: { event_date_id: event_date_id }
+      post '/api/reservations', reservation: {
+        event_date_id: event_date_id,
+        event_slot_id: event_slot_id
+      }
     end.to change(Reservation, :count).by(1)
 
     expect(response.status).to eq(201)
