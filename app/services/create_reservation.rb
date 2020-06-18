@@ -4,13 +4,12 @@
 #   Ensures that the user has not already reserved a spot
 #   Ensures that the event_date has open capacity
 class CreateReservation
-  attr_reader :user_id, :event_date_id, :reservation
+  attr_reader :user_id, :event_date_id, :event_slot_id, :reservation
 
-  def initialize(user_id:, event_date_id:)
-    @user_id = user_id
-    @event_date_id = event_date_id
-    @reservation = Reservation.new(user_id: user_id,
-                                   event_date_id: event_date_id)
+  def initialize(options = {})
+    @user_id = options[:user_id]
+    @event_date_id = options[:event_date_id]
+    @reservation = Reservation.new(options)
   end
 
   def call
