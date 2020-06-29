@@ -3,7 +3,7 @@
 # Migration to create the addresses table
 class CreateAddresses < ActiveRecord::Migration[6.0]
   def change
-    create_table :addresses do |t|
+    create_table :household_addresses do |t|
       t.belongs_to :household, index: { unique: true }, foreign_key: true
       t.string  :line_1, null: false
       t.string  :line_2
@@ -13,6 +13,8 @@ class CreateAddresses < ActiveRecord::Migration[6.0]
       t.string  :zip_4
       t.integer :added_by, null: false
       t.integer :last_updated_by, null: false
+      t.integer :deleted_by, null: true
+      t.datetime :deleted_on, null: true
       t.timestamps
     end
   end

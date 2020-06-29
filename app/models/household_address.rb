@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # The address associated with a household
-class Address < ApplicationRecord
+class HouseholdAddress < ApplicationRecord
   belongs_to :household, inverse_of: :address
 
   validates :state,
