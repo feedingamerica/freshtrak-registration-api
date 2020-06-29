@@ -70,13 +70,15 @@ module Api
     # the model name in the "permit" as well as the payload to the controller.
     def household_params
       params.require(:household).permit(:number, :name,
-                                        household_address_attributes: %i[id line_1
-                                                               line_2
-                                                               city
-                                                               state
-                                                               zip_code
-                                                               zip_4
-                                                               _destroy])
+                                        household_address_attributes: %i[
+                                          id line_1
+                                          line_2
+                                          city
+                                          state
+                                          zip_code
+                                          zip_4
+                                          _destroy
+                                        ])
     end
   end
 end
