@@ -7,7 +7,7 @@ describe Api::HouseholdsController, type: :controller do
     let(:household) do
       Household.create(number: 2, name: 'Fun House',
                        added_by: user.id, last_updated_by: user.id,
-                       address_attributes: {
+                       household_address_attributes: {
                          line_1: '123 Test St',
                          line_2: nil,
                          city: 'Irontown',
@@ -26,7 +26,7 @@ describe Api::HouseholdsController, type: :controller do
     it 'adds a household' do
       expect do
         post '/api/households', household: { number: 2, name: 'Fun House',
-                                             address_attributes: {
+                                             household_address_attributes: {
                                                line_1: '123 Test St',
                                                line_2: nil,
                                                city: 'Irontown',

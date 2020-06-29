@@ -55,10 +55,10 @@ module Api
     def set_added_by
       @household.added_by = current_user.id
       @household.last_updated_by = current_user.id
-      return unless @household.address
+      return unless @household.household_address
 
-      @household.address.added_by = current_user.id
-      @household.address.last_updated_by = current_user.id
+      @household.household_address.added_by = current_user.id
+      @household.household_address.last_updated_by = current_user.id
     end
 
     def set_household
@@ -70,7 +70,7 @@ module Api
     # the model name in the "permit" as well as the payload to the controller.
     def household_params
       params.require(:household).permit(:number, :name,
-                                        address_attributes: %i[id line_1
+                                        household_address_attributes: %i[id line_1
                                                                line_2
                                                                city
                                                                state

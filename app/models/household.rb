@@ -9,12 +9,13 @@ class Household < ApplicationRecord
   # Allows the household controller to create a household_address
   # record when supplied in the payload.
   accepts_nested_attributes_for :household_address, allow_destroy: true
+  before_validation :set_identification_code, on: :create
 
   validates :identification_code, presence: true,
                                   uniqueness: { case_sensitive: true }
 
   # Validations for the model
-  validates :address, presence: true
+  validates :household_address, presence: true
   validates :name, presence: true
   validates :number, presence: true
 
