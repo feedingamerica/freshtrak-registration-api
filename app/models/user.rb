@@ -20,7 +20,7 @@ class User < ApplicationRecord
                                   uniqueness: { case_sensitive: true }
   validates :phone, format: { with: /\A\d{10}\z/ }, allow_blank: true
 
-  validates :credential_id, presence: true
+  validates :credential_id, presence: true, allow_blank: true
 
   private
 
