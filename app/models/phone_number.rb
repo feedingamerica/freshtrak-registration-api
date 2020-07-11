@@ -2,7 +2,7 @@
 
 # Phone for Household Member
 class PhoneNumber < ApplicationRecord
-  belongs_to :member, inverse_of: :phone
+  belongs_to :household_member, inverse_of: :phone
   belongs_to :location_type
   belongs_to :carrier_type
 

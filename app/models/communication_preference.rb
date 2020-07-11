@@ -2,7 +2,7 @@
 
 # Communication Preference for Household Member
 class CommunicationPreference < ApplicationRecord
-  belongs_to :member, inverse_of: :communication_preference
+  belongs_to :household_member, inverse_of: :communication_preference
   belongs_to :communication_preference_type
 
   validates :member_id,

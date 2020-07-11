@@ -2,7 +2,7 @@
 
 # Email for a Household Member
 class Email < ApplicationRecord
-  belongs_to :member, inverse_of: :email
+  belongs_to :household_member, inverse_of: :email
   belongs_to :location_type
 
   validates :email, presence: true,

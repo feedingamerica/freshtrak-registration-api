@@ -6,13 +6,13 @@ class Household < ApplicationRecord
 
   # Determines table relationships. We can alias household_address -> address
   has_one :household_address, inverse_of: :household, dependent: :destroy
-  has_many :members, inverse_of: :household, dependent: :destroy
+  has_many :household_members, inverse_of: :household, dependent: :destroy
   has_many :event_registrations, inverse_of: :household, dependent: :destroy
   # Allows the household controller to create a household_address
   # record when supplied in the payload.
   accepts_nested_attributes_for :household_address, allow_destroy: true
-  accepts_nested_attributes_for :members, allow_destroy: true
-   before_validation :set_identification_code, on: :create
+  accepts_nested_attributes_for :household_members, allow_destroy: true
+  before_validation :set_identification_code, on: :create
 
   validates :identification_code, presence: true,
                                   uniqueness: { case_sensitive: true }
