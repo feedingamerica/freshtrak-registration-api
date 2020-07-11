@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module PantryTrak
+  # Creates PantryTrak client: handling of reservartions and users
+  # For user details, see pantry_trak/users.rb
   class Client
     def create_user(user)
       raise 'Requires PantryTrak::User' unless user.instance_of? PantryTrak::User
