@@ -6,5 +6,5 @@ class EventRegistrationMember < ApplicationRecord
   belongs_to :household_member
 
   validates :event_registration_id, presence: true
-  validates :member_id, presence: true
+  validates :household_member_id, presence: true
 end
