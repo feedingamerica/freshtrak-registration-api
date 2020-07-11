@@ -35,6 +35,7 @@ module Api
     # PUT /households/1
     def update
       if @household.update(household_params)
+        set_added_by
         render json: @household
       else
         render json: @household.errors, status: :unprocessable_entity
