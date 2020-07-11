@@ -35,7 +35,7 @@ module Api
     # PUT /households/1
     def update
       if @household.update(household_params)
-        set_added_by
+        set_updated_by
         render json: @household
       else
         render json: @household.errors, status: :unprocessable_entity
@@ -55,10 +55,16 @@ module Api
 
     def set_added_by
       @household.added_by = current_user.id
-      @household.last_updated_by = current_user.id
+      set_updated_by
       return unless @household.household_address
 
       @household.household_address.added_by = current_user.id
+    end
+
+    def set_updated_by
+      @household.last_updated_by = current_user.id
+      return unless @household.household_address
+
       @household.household_address.last_updated_by = current_user.id
     end
 
