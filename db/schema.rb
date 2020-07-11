@@ -12,21 +12,6 @@
 
 ActiveRecord::Schema.define(version: 2020_06_16_190850) do
 
-  create_table "addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "household_id"
-    t.string "line_1", null: false
-    t.string "line_2"
-    t.string "city", null: false
-    t.string "state", null: false
-    t.string "zip_code", null: false
-    t.string "zip_4"
-    t.integer "added_by", null: false
-    t.integer "last_updated_by", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["household_id"], name: "index_addresses_on_household_id", unique: true
-  end
-
   create_table "alt_id_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "description"
@@ -153,13 +138,34 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "household_addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.string "line_1", null: false
+    t.string "line_2"
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "zip_code", null: false
+    t.string "zip_4"
+    t.integer "added_by", null: false
+    t.integer "last_updated_by", null: false
+    t.integer "deleted_by"
+    t.datetime "deleted_on"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["household_id"], name: "index_household_addresses_on_household_id", unique: true
+  end
+
   create_table "households", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "number", null: false
     t.string "name", null: false
+    t.string "identification_code", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
+    t.integer "deleted_by"
+    t.datetime "deleted_on"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["identification_code"], name: "index_households_on_identification_code", unique: true
   end
 
   create_table "location_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -271,7 +277,6 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
     t.index ["user_detail_id"], name: "fk_rails_5de4188fc5"
   end
 
-  add_foreign_key "addresses", "households"
   add_foreign_key "alt_ids", "alt_id_types"
   add_foreign_key "alt_ids", "members"
   add_foreign_key "authentications", "users"
@@ -284,6 +289,7 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
   add_foreign_key "event_registration_members", "members"
   add_foreign_key "event_registrations", "event_statuses"
   add_foreign_key "event_registrations", "households"
+  add_foreign_key "household_addresses", "households"
   add_foreign_key "members", "genders"
   add_foreign_key "members", "households"
   add_foreign_key "members", "suffixes"

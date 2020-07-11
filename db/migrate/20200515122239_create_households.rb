@@ -11,10 +11,12 @@ class CreateHouseholds < ActiveRecord::Migration[6.0]
     create_table :households do |t|
       t.integer :number, null: false
       t.string :name, null: false
+      t.string :identification_code, null: false
       t.integer :added_by, null: false
       t.integer :last_updated_by, null: false
-      # Creates created_at and updated_at columns. These are
-      # managed automatically
+      t.integer :deleted_by, null: true
+      t.datetime :deleted_on, null: true
+      t.index :identification_code, unique: true
       t.timestamps
     end
   end
