@@ -23,14 +23,14 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
 
   create_table "alt_ids", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "alt_id_type_id", null: false
-    t.bigint "member_id", null: false
+    t.bigint "household_member_id", null: false
     t.string "value", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["alt_id_type_id"], name: "index_alt_ids_on_alt_id_type_id"
-    t.index ["member_id"], name: "index_alt_ids_on_member_id"
+    t.index ["household_member_id"], name: "index_alt_ids_on_household_member_id"
   end
 
   create_table "authentications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -62,15 +62,15 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
   end
 
   create_table "communication_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "member_id", null: false
+    t.bigint "household_member_id", null: false
     t.bigint "communication_preference_type_id", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["communication_preference_type_id"], name: "fk_communication_pref_type"
-    t.index ["member_id", "communication_preference_type_id"], name: "uq_communication_pref_member", unique: true
-    t.index ["member_id"], name: "index_communication_preferences_on_member_id"
+    t.index ["household_member_id", "communication_preference_type_id"], name: "uq_communication_pref_member", unique: true
+    t.index ["household_member_id"], name: "index_communication_preferences_on_household_member_id"
   end
 
   create_table "credentials", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -88,26 +88,26 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
 
   create_table "emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "location_type_id", null: false
-    t.bigint "member_id", null: false
+    t.bigint "household_member_id", null: false
     t.string "email", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_emails_on_email", unique: true
+    t.index ["household_member_id"], name: "index_emails_on_household_member_id"
     t.index ["location_type_id"], name: "index_emails_on_location_type_id"
-    t.index ["member_id"], name: "index_emails_on_member_id"
   end
 
   create_table "event_registration_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "event_registration_id"
-    t.bigint "member_id"
+    t.bigint "household_member_id"
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["event_registration_id"], name: "index_event_registration_members_on_event_registration_id", unique: true
-    t.index ["member_id"], name: "index_event_registration_members_on_member_id", unique: true
+    t.index ["household_member_id"], name: "index_event_registration_members_on_household_member_id", unique: true
   end
 
   create_table "event_registrations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -155,6 +155,27 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
     t.index ["household_id"], name: "index_household_addresses_on_household_id", unique: true
   end
 
+  create_table "household_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "household_id"
+    t.bigint "user_id"
+    t.integer "number"
+    t.string "first_name", null: false
+    t.string "middle_name"
+    t.string "last_name", null: false
+    t.date "date_of_birth", null: false
+    t.boolean "is_head_of_household", default: false, null: false
+    t.boolean "is_active", default: true, null: false
+    t.string "added_by", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "gender_id"
+    t.bigint "suffix_id"
+    t.index ["gender_id"], name: "fk_rails_2bc1598f86"
+    t.index ["household_id"], name: "index_household_members_on_household_id"
+    t.index ["suffix_id"], name: "fk_rails_a183117179"
+    t.index ["user_id"], name: "index_household_members_on_user_id"
+  end
+
   create_table "households", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "number", null: false
     t.string "name", null: false
@@ -176,39 +197,18 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "household_id"
-    t.bigint "user_id"
-    t.integer "number"
-    t.string "first_name", null: false
-    t.string "middle_name"
-    t.string "last_name", null: false
-    t.date "date_of_birth", null: false
-    t.boolean "is_head_of_household", default: false, null: false
-    t.boolean "is_active", default: true, null: false
-    t.string "added_by", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.bigint "gender_id"
-    t.bigint "suffix_id"
-    t.index ["gender_id"], name: "fk_rails_a1d4cdda3e"
-    t.index ["household_id"], name: "index_members_on_household_id"
-    t.index ["suffix_id"], name: "fk_rails_515205f7ad"
-    t.index ["user_id"], name: "index_members_on_user_id"
-  end
-
   create_table "phone_numbers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "location_type_id", null: false
     t.bigint "carrier_type_id"
-    t.bigint "member_id", null: false
+    t.bigint "household_member_id", null: false
     t.string "phone_number", null: false
     t.integer "added_by", null: false
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["carrier_type_id"], name: "index_phone_numbers_on_carrier_type_id"
+    t.index ["household_member_id"], name: "index_phone_numbers_on_household_member_id"
     t.index ["location_type_id"], name: "index_phone_numbers_on_location_type_id"
-    t.index ["member_id"], name: "index_phone_numbers_on_member_id"
   end
 
   create_table "reservations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -278,25 +278,25 @@ ActiveRecord::Schema.define(version: 2020_06_16_190850) do
   end
 
   add_foreign_key "alt_ids", "alt_id_types"
-  add_foreign_key "alt_ids", "members"
+  add_foreign_key "alt_ids", "household_members"
   add_foreign_key "authentications", "users"
   add_foreign_key "communication_preferences", "communication_preference_types"
-  add_foreign_key "communication_preferences", "members"
+  add_foreign_key "communication_preferences", "household_members"
   add_foreign_key "credentials", "users"
+  add_foreign_key "emails", "household_members"
   add_foreign_key "emails", "location_types"
-  add_foreign_key "emails", "members"
   add_foreign_key "event_registration_members", "event_registrations"
-  add_foreign_key "event_registration_members", "members"
+  add_foreign_key "event_registration_members", "household_members"
   add_foreign_key "event_registrations", "event_statuses"
   add_foreign_key "event_registrations", "households"
   add_foreign_key "household_addresses", "households"
-  add_foreign_key "members", "genders"
-  add_foreign_key "members", "households"
-  add_foreign_key "members", "suffixes"
-  add_foreign_key "members", "users"
+  add_foreign_key "household_members", "genders"
+  add_foreign_key "household_members", "households"
+  add_foreign_key "household_members", "suffixes"
+  add_foreign_key "household_members", "users"
   add_foreign_key "phone_numbers", "carrier_types"
+  add_foreign_key "phone_numbers", "household_members"
   add_foreign_key "phone_numbers", "location_types"
-  add_foreign_key "phone_numbers", "members"
   add_foreign_key "reservations", "users"
   add_foreign_key "user_details", "users"
   add_foreign_key "users", "credentials"

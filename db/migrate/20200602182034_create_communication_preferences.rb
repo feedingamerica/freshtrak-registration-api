@@ -4,7 +4,7 @@
 class CreateCommunicationPreferences < ActiveRecord::Migration[6.0]
   def change
     create_table :communication_preferences do |t|
-      t.references :member, foreign_key: true, null: false
+      t.references :household_member, foreign_key: true, null: false
       t.references :communication_preference_type,
                    foreign_key: true,
                    null: false,

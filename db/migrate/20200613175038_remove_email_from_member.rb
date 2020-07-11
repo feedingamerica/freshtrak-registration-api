@@ -3,6 +3,6 @@
 # Remove email column from Household Member
 class RemoveEmailFromMember < ActiveRecord::Migration[6.0]
   def change
-    remove_column :members, :email, :string
+    remove_column :household_members, :email, :string
   end
 end
