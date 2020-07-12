@@ -5,7 +5,9 @@ module PantryTrak
   # For user details, see pantry_trak/users.rb
   class Client
     def create_user(user)
-      raise 'Requires PantryTrak::User' unless user.instance_of? PantryTrak::User
+      unless user.instance_of? PantryTrak::User
+        raise 'Requires PantryTrak::User'
+      end
       raise user.errors.full_messages.to_sentence unless user.valid?
 
       connection.post(create_user_path, user.to_json) do |req|
