@@ -5,23 +5,18 @@ module PantryTrak
   # For user details, see pantry_trak/users.rb
   class Client
     def create_user(user)
-      unless user.instance_of? PantryTrak::User
-        raise 'Requires PantryTrak::User'
-      end
-      raise user.errors.full_messages.to_sentence unless user.valid?
-
       connection.post(create_user_path, user.to_json) do |req|
         req.headers['Authorization'] = bearer_token
       end.body
     end
 
-    def create_reservation(id, user_id, event_date_id, event_slot_id)
+    def create_reservation(id, user_id, event_date_id, event_slot_id = nil)
       payload = {
         id: id,
         user_id: user_id,
         event_date_id: event_date_id,
         event_slot_id: event_slot_id
-      }
+      }.compact
       connection.post(create_reservation_path, payload) do |req|
         req.headers['Authorization'] = bearer_token
       end.body

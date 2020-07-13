@@ -263,7 +263,7 @@ DEPENDENCIES
   faraday (~> 1.0)
   faraday_middleware (~> 1.0)
   jets
-  jwt
+  jwt (~> 2.2.1)
   launchy
   mysql2 (~> 0.5.2)
   puma
