@@ -77,8 +77,12 @@ class CreateReservation
   end
 
   def event_reservations
-    @event_reservations ||= Reservation.where(event_date_id: event_date_id,
-                                              event_slot_id: event_slot_id)
+    @event_reservations ||= if event_slot_id
+                              Reservation.where(event_date_id: event_date_id,
+                                                event_slot_id: event_slot_id)
+                            else
+                              Reservation.where(event_date_id: event_date_id)
+                            end
   end
 
   def failure
