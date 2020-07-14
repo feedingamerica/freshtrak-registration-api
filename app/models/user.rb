@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   has_many :authentications, inverse_of: :user, dependent: :destroy
   has_many :reservations, inverse_of: :user, dependent: :restrict_with_exception
+  has_one :credential, inverse_of: :user, dependent: :destroy
+  has_one :user_detail, inverse_of: :user, dependent: :destroy
 
   before_validation :set_identification_code, on: :create
   before_validation :clean_phone
@@ -17,6 +19,8 @@ class User < ApplicationRecord
   validates :identification_code, presence: true,
                                   uniqueness: { case_sensitive: true }
   validates :phone, format: { with: /\A\d{10}\z/ }, allow_blank: true
+
+  validates :credential_id, presence: true, allow_blank: true
 
   private
 
