@@ -15,10 +15,6 @@ class PantryFinderApi
     client.get("#{BASE_URL}/event_dates/#{id}").body[:event_date]
   end
 
-  def event_slot(id)
-    client.get("#{BASE_URL}/event_slots/#{id}").body[:event_slot]
-  end
-
   private
 
   def client

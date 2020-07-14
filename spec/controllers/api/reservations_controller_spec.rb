@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Api::ReservationsController, type: :controller do
+describe Api::ReservationsController, type: :controller, dbclean: :after_each do
   let(:user) { User.create(user_type: :guest) }
   let(:pantry_finder_api) { instance_double(PantryFinderApi) }
   # create another reservation to ensure that api is scoped to user
@@ -15,7 +15,6 @@ describe Api::ReservationsController, type: :controller do
 
   it 'indexes all reservations belonging to a user' do
     reservations = 2.times.map { user.reservations.create!(event_date_id: 1) }
-
     get '/api/reservations'
 
     expect(response.status).to eq(200)
@@ -40,13 +39,11 @@ describe Api::ReservationsController, type: :controller do
     expect(response.status).to eq(404)
   end
 
-  it 'creates a reservation through Reserve Time' do
+  it 'creates a reservation for an event slot' do
     event_date_id = (user.reservations.pluck(:event_date_id).max || 0) + 1
     event_slot_id = (user.reservations.pluck(:event_slot_id).max || 0) + 1
     allow(pantry_finder_api).to receive(:event_date)
-      .with(event_date_id.to_s).and_return(capacity: Float::INFINITY)
-    allow(pantry_finder_api).to receive(:event_slot)
-      .with(event_slot_id.to_s).and_return(capacity: Float::INFINITY)
+      .and_return(event_date_response)
 
     expect do
       post '/api/reservations', reservation: {
@@ -62,7 +59,7 @@ describe Api::ReservationsController, type: :controller do
     expect(response_body['event_slot_id']).to eq(event_slot_id)
   end
 
-  it 'creates a reservation through RSVP' do
+  it 'creates a reservation for an event date' do
     event_date_id = (user.reservations.pluck(:event_date_id).max || 0) + 1
     allow(pantry_finder_api).to receive(:event_date)
       .with(event_date_id.to_s).and_return(capacity: Float::INFINITY)
@@ -106,5 +103,26 @@ describe Api::ReservationsController, type: :controller do
       .not_to change(Reservation, :count)
 
     expect(response.status).to eq(403)
+  end
+
+  def event_date_response
+    {
+      id: '1', event_id: 663, capacity: Float::INFINITY, accept_walkin: 1,
+      accept_reservations: 1, accept_interest: 1, start_time: '12 PM',
+      end_time: '3 PM', date: '2020-07-30',
+      event_hours:
+      [
+        {
+          event_hour_id: 7048, capacity: 33, start_time: '12 PM',
+          end_time: '12:59 PM', open_slots: 33, event_slots:
+          [
+            {
+              event_slot_id: '1', capacity: Float::INFINITY,
+              start_time: '12 PM', end_time: '12:59 PM', open_slots: 33
+            }
+          ]
+        }
+      ]
+    }
   end
 end

@@ -7,15 +7,19 @@
 class CreateReservation
   attr_reader :user_id, :event_date_id, :event_slot_id, :reservation
 
-  def initialize(options = {})
-    @user_id = options[:user_id]
-    @event_date_id = options[:event_date_id]
-    @event_slot_id = options[:event_slot_id]
-    @reservation = Reservation.new(options)
+  def initialize(user_id:, event_date_id:, event_slot_id: nil)
+    @user_id = user_id
+    @event_date_id = event_date_id
+    @event_slot_id = event_slot_id
+    @reservation = Reservation.new(user_id: user_id,
+                                   event_date_id: event_date_id,
+                                   event_slot_id: event_slot_id)
   end
 
   def call
-    return failure if user_already_has_reservation? || event_is_at_capacity?
+    return failure if user_already_has_reservation?
+
+    return failure if event_date_capacity? || event_slot_capacity?
 
     return failure unless reservation.save
 
@@ -38,34 +42,43 @@ class CreateReservation
     user_already_has_reservation
   end
 
-  def event_is_at_capacity?
-    event_is_at_capacity = event_reservations.count >= event_capacity
+  def event_date_capacity?
+    event_date_capacity =
+      event_reservations.count >= event_date[:capacity]
 
-    if event_is_at_capacity
-      if event_slot_id.present?
-        reservation.errors.add(:event_slot_id, 'is at capacity')
-      else
-        reservation.errors.add(:event_date_id, 'is at capacity')
-      end
+    if event_date_capacity
+      reservation.errors.add(:event_date_id, 'is at capacity')
     end
 
-    event_is_at_capacity
+    event_date_capacity
   end
 
-  def event_capacity
-    if event_slot_id.present?
-      PantryFinderApi.new.event_slot(event_slot_id)[:capacity]
-    else
-      PantryFinderApi.new.event_date(event_date_id)[:capacity]
+  def event_slot_capacity?
+    return unless event_slot_id
+
+    event_slot_capacity =
+      event_reservations.count >= event_slot[:capacity]
+
+    if event_slot_capacity
+      reservation.errors.add(:event_slot_id, 'is at capacity')
     end
+
+    event_slot_capacity
+  end
+
+  def event_date
+    PantryFinderApi.new.event_date(event_date_id)
+  end
+
+  def event_slot
+    event_date[:event_hours]
+      .map { |eh| eh[:event_slots] }.flatten
+      .select { |es| es[:event_slot_id] == event_slot_id }[0]
   end
 
   def event_reservations
-    @event_reservations ||= if event_slot_id.present?
-                              Reservation.by_event_slot_id(event_slot_id)
-                            else
-                              Reservation.by_event_date_id(event_date_id)
-                            end
+    @event_reservations ||= Reservation.where(event_date_id: event_date_id,
+                                              event_slot_id: event_slot_id)
   end
 
   def failure
