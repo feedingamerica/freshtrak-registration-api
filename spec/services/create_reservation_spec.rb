@@ -4,7 +4,11 @@ describe CreateReservation do
   before do
     allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
     allow_any_instance_of(Reservation).to receive(:sync_to_pantry_trak)
+    allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
+    allow(pantry_finder_api).to receive(:event_date)
+      .with(event_date_id).and_return(capacity: capacity)
   end
+
   let(:user) { User.create(user_type: :guest) }
   let(:event_date_id) { unique_event_date_id }
 
@@ -15,12 +19,6 @@ describe CreateReservation do
     described_class.new(user_id: user.id, event_date_id: event_date_id)
   end
   let(:service_call) { service.call }
-
-  before do
-    allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
-    allow(pantry_finder_api).to receive(:event_date)
-      .with(event_date_id).and_return(capacity: capacity)
-  end
 
   it 'creates a reservation' do
     expect { service_call }.to change(Reservation, :count).by(1)

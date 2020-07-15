@@ -20,6 +20,7 @@ describe Api::HouseholdsController, type: :controller do
     end
 
     before do
+      allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
       sign_in_api(user)
     end
 

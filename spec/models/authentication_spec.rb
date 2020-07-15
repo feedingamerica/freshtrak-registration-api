@@ -4,6 +4,7 @@ describe Authentication, type: :model do
   before do
     allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
   end
+
   let(:authentication) { described_class.create(user_id: user.id) }
   let(:user) { User.create(user_type: :guest) }
 

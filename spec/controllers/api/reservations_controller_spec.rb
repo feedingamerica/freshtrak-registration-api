@@ -4,6 +4,8 @@ describe Api::ReservationsController, type: :controller do
   before do
     allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
     allow_any_instance_of(Reservation).to receive(:sync_to_pantry_trak)
+    sign_in_api(user)
+    allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
   end
 
   let(:user) { User.create(user_type: :guest) }
@@ -11,11 +13,6 @@ describe Api::ReservationsController, type: :controller do
   # create another reservation to ensure that api is scoped to user
   let(:other_user) { User.create(user_type: :guest) }
   let!(:other_reservation) { other_user.reservations.create!(event_date_id: 1) }
-
-  before do
-    sign_in_api(user)
-    allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
-  end
 
   it 'indexes all reservations belonging to a user' do
     reservations = 2.times.map { user.reservations.create!(event_date_id: 1) }

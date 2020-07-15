@@ -2,8 +2,9 @@
 
 describe User, type: :model do
   before do
-    allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
+    allow_any_instance_of(described_class).to receive(:sync_to_pantry_trak)
   end
+
   let(:user) { described_class.create(user_type: :guest) }
 
   it 'sets an unique identification code' do
