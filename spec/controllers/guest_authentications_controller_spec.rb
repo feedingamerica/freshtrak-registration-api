@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 describe GuestAuthenticationsController, type: :controller do
+  before do
+    allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
+  end
   it 'returns a token on post' do
     post '/guest_authentications'
 

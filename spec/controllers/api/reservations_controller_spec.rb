@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 describe Api::ReservationsController, type: :controller do
+  before do
+    allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
+    allow_any_instance_of(Reservation).to receive(:sync_to_pantry_trak)
+  end
+
   let(:user) { User.create(user_type: :guest) }
   let(:pantry_finder_api) { instance_double(PantryFinderApi) }
   # create another reservation to ensure that api is scoped to user
@@ -9,7 +14,6 @@ describe Api::ReservationsController, type: :controller do
 
   before do
     sign_in_api(user)
-
     allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
   end
 

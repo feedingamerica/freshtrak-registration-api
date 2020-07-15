@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 describe CreateReservation do
+  before do
+    allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
+    allow_any_instance_of(Reservation).to receive(:sync_to_pantry_trak)
+  end
   let(:user) { User.create(user_type: :guest) }
   let(:event_date_id) { unique_event_date_id }
 
