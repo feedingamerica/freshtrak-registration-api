@@ -67,22 +67,17 @@ class CreateReservation
   end
 
   def event_date
-    PantryFinderApi.new.event_date(event_date_id)
+    @event_date ||= PantryFinderApi.new.event_date(event_date_id)
   end
 
   def event_slot
-    event_date[:event_hours]
-      .map { |eh| eh[:event_slots] }.flatten
-      .select { |es| es[:event_slot_id] == event_slot_id }[0]
+    @event_slot ||=
+      event_date[:event_hours].map { |eh| eh[:event_slots] }.flatten
+                              .find { |es| es[:event_slot_id] == event_slot_id }
   end
 
   def event_reservations
-    @event_reservations ||= if event_slot_id
-                              Reservation.where(event_date_id: event_date_id,
-                                                event_slot_id: event_slot_id)
-                            else
-                              Reservation.where(event_date_id: event_date_id)
-                            end
+    @event_reservations ||= Reservation.where(event_date_id: event_date_id)
   end
 
   def failure

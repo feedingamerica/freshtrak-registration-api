@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Api::ReservationsController, type: :controller, dbclean: :after_each do
+describe Api::ReservationsController, type: :controller do
   let(:user) { User.create(user_type: :guest) }
   let(:pantry_finder_api) { instance_double(PantryFinderApi) }
   # create another reservation to ensure that api is scoped to user
@@ -107,18 +107,14 @@ describe Api::ReservationsController, type: :controller, dbclean: :after_each do
 
   def event_date_response
     {
-      id: '1', event_id: 663, capacity: Float::INFINITY, accept_walkin: 1,
-      accept_reservations: 1, accept_interest: 1, start_time: '12 PM',
-      end_time: '3 PM', date: '2020-07-30',
+      id: '1', event_id: 663, capacity: Float::INFINITY,
       event_hours:
       [
         {
-          event_hour_id: 7048, capacity: 33, start_time: '12 PM',
-          end_time: '12:59 PM', open_slots: 33, event_slots:
+          event_hour_id: 7048, capacity: Float::INFINITY, event_slots:
           [
             {
-              event_slot_id: '1', capacity: Float::INFINITY,
-              start_time: '12 PM', end_time: '12:59 PM', open_slots: 33
+              event_slot_id: '1', capacity: Float::INFINITY
             }
           ]
         }

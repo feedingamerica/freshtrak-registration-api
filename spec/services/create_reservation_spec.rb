@@ -114,18 +114,14 @@ describe CreateReservation do
 
   def event_date_response
     {
-      id: event_date_id, event_id: 663, capacity: capacity, accept_walkin: 1,
-      accept_reservations: 1, accept_interest: 1, start_time: '12 PM',
-      end_time: '3 PM', date: '2020-07-30',
+      id: event_date_id, event_id: 663, capacity: capacity,
       event_hours:
       [
         {
-          event_hour_id: 7048, capacity: capacity, start_time: '12 PM',
-          end_time: '12:59 PM', open_slots: 33, event_slots:
+          event_hour_id: 7048, capacity: capacity, event_slots:
           [
             {
-              event_slot_id: event_slot_id, capacity: slot_capacity,
-              start_time: '12 PM', end_time: '12:59 PM', open_slots: 33
+              event_slot_id: event_slot_id, capacity: slot_capacity
             }
           ]
         }
