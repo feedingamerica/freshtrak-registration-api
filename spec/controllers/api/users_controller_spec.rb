@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe Api::UsersController, type: :controller do
-  before do
-    allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
-  end
-
   context 'with authenticated requests' do
     let(:user) { User.create(user_type: :guest) }
+    let(:pantry_track_client) { instance_double(PantryTrak::Client) }
 
     before do
+      allow(PantryTrak::Client).to receive(:new).and_return(pantry_track_client)
+      allow(pantry_track_client).to receive(:create_user)
+      allow(user).to receive(:sync_to_pantry_trak)
       sign_in_api(user)
     end
 

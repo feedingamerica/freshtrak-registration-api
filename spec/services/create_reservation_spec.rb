@@ -2,8 +2,13 @@
 
 describe CreateReservation do
   before do
-    allow_any_instance_of(User).to receive(:sync_to_pantry_trak)
-    allow_any_instance_of(Reservation).to receive(:sync_to_pantry_trak)
+    allow(PantryTrak::Client).to receive(:new).and_return(pantry_track_client)
+    allow(pantry_track_client).to receive(:create_reservation)
+    allow(Reservation).to receive(:sync_to_pantry_trak)
+
+    allow(pantry_track_client).to receive(:create_user)
+    allow(User).to receive(:sync_to_pantry_trak)
+
     allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
     allow(pantry_finder_api).to receive(:event_date)
       .with(event_date_id).and_return(capacity: capacity)
@@ -13,6 +18,8 @@ describe CreateReservation do
   let(:event_date_id) { unique_event_date_id }
 
   let(:pantry_finder_api) { instance_double(PantryFinderApi) }
+
+  let(:pantry_track_client) { instance_double(PantryTrak::Client) }
   let(:capacity) { 100 }
 
   let(:service) do
