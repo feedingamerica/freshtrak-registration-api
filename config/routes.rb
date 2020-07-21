@@ -6,7 +6,7 @@ Jets.application.routes.draw do
   namespace :api do
     resources :reservations, only: %i[index show create delete]
     resource :user, only: %i[show update]
-    resources :households
+    resources :households, only: %i[show create update delete]
   end
 
   root 'jets/public#show'
