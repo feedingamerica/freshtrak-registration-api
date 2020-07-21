@@ -4,7 +4,6 @@ describe PantryFinderApi do
   let(:url) { 'http://test.com' }
   let(:pantry_finder_api) { described_class.new(url: url) }
   let(:stubs) { Faraday::Adapter::Test::Stubs.new }
-  let(:conn) { Faraday.new { |config| config.adapter :test, stubs } }
 
   before do
     allow(Faraday).to receive(:new).and_return(conn)
@@ -20,6 +19,16 @@ describe PantryFinderApi do
     end
     response = pantry_finder_api.event_date('123')
     response.should == event_date_response[:event_date]
+  end
+
+  def conn
+    Faraday.new(url: url) do |config|
+      config.request :json
+      config.response :raise_error
+      config.response :json, parser_options: { symbolize_names: true },
+                             content_type: /\bjson$/
+      config.adapter :test, stubs
+    end
   end
 
   def event_date_response

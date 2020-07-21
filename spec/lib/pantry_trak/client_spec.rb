@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe PantryTrak::Client do
+  let(:base_url) { 'http://test.com' }
   let(:stubs) { Faraday::Adapter::Test::Stubs.new }
-  let(:conn) { Faraday.new { |config| config.adapter :test, stubs } }
 
   before do
     allow(Faraday).to receive(:new).and_return(conn)
@@ -30,6 +30,16 @@ describe PantryTrak::Client do
     end
     response = described_class.new.create_user('guest')
     response.should == user_post_data
+  end
+
+  def conn
+    Faraday.new(url: base_url) do |config|
+      config.request :json
+      config.response :raise_error
+      config.response :json, parser_options: { symbolize_names: true },
+                             content_type: /\bjson$/
+      config.adapter :test, stubs
+    end
   end
 
   def reservation_post_data
