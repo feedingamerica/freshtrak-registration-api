@@ -31,6 +31,7 @@ describe CreateReservation do
     expect(reservation).to be_persisted
     expect(reservation.user_id).to eq(user.id)
     expect(reservation.event_date_id).to eq(event_date_id)
+    expect(reservation.event_slot_id).to eq(event_slot_id)
   end
 
   context 'when user already has a reservation for this event' do
@@ -73,6 +74,34 @@ describe CreateReservation do
       expect(service_call.errors.full_messages).to eq(
         ['Event slot is at capacity']
       )
+    end
+  end
+
+  context 'when the event slot is for another date' do
+    it 'does not create a reservation' do
+      expect do
+        response = described_class.new(
+          user_id: user.id, event_date_id: event_date_id,
+          event_slot_id: event_slot_id + 1
+        ).call
+
+        expect(response).not_to be_success
+        expect(response.errors.full_messages).to eq(
+          ['Event slot is not for event date']
+        )
+      end.not_to change(Reservation, :count)
+    end
+  end
+
+  context 'when the event slot is not specified' do
+    it 'creates a reservation' do
+      expect do
+        response = described_class.new(
+          user_id: user.id, event_date_id: event_date_id
+        ).call
+
+        expect(response).to be_success
+      end.to change(Reservation, :count)
     end
   end
 

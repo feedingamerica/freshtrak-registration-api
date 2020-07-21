@@ -17,53 +17,54 @@ class CreateReservation
   end
 
   def call
-    return failure if user_already_has_reservation?
+    begin
+      check_if_user_already_has_reservation
+      check_if_event_date_at_capacity
+      check_if_valid_event_slot
 
-    return failure if event_date_capacity? || event_slot_capacity?
+      return success if reservation.errors.empty? && reservation.save
+    rescue Faraday::Error => e
+      reservation.errors.add(:pantry_finder_api, e.message)
+    end
 
-    return failure unless reservation.save
-
-    success
-  rescue Faraday::Error => e
-    reservation.errors.add(:pantry_finder_api, e.message)
     failure
   end
 
   private
 
-  def user_already_has_reservation?
+  def check_if_user_already_has_reservation
     user_already_has_reservation =
       event_reservations.where(user_id: user_id).exists?
 
-    if user_already_has_reservation
-      reservation.errors.add(:user_id, 'has already registered for this event')
-    end
+    return unless user_already_has_reservation
 
-    user_already_has_reservation
+    reservation.errors.add(:user_id, 'has already registered for this event')
   end
 
-  def event_date_capacity?
-    event_date_capacity =
+  def check_if_event_date_at_capacity
+    event_date_at_capacity =
       event_reservations.count >= event_date[:capacity]
 
-    if event_date_capacity
-      reservation.errors.add(:event_date_id, 'is at capacity')
-    end
+    return unless event_date_at_capacity
 
-    event_date_capacity
+    reservation.errors.add(:event_date_id, 'is at capacity')
   end
 
-  def event_slot_capacity?
+  def check_if_valid_event_slot
     return unless event_slot_id
 
-    event_slot_capacity =
-      event_reservations.count >= event_slot[:capacity]
-
-    if event_slot_capacity
+    if event_slot && event_slot_at_capacity?
       reservation.errors.add(:event_slot_id, 'is at capacity')
+    elsif !event_slot
+      reservation.errors.add(:event_slot_id, 'is not for event date')
     end
+  end
 
-    event_slot_capacity
+  def event_slot_at_capacity?
+    event_slot_reservations =
+      event_reservations.where(event_slot_id: event_slot_id)
+
+    event_slot_reservations.count >= event_slot[:capacity]
   end
 
   def event_date
