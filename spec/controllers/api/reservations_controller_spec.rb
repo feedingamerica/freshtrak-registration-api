@@ -15,7 +15,6 @@ describe Api::ReservationsController, type: :controller do
 
   it 'indexes all reservations belonging to a user' do
     reservations = 2.times.map { user.reservations.create!(event_date_id: 1) }
-
     get '/api/reservations'
 
     expect(response.status).to eq(200)
@@ -40,13 +39,35 @@ describe Api::ReservationsController, type: :controller do
     expect(response.status).to eq(404)
   end
 
-  it 'creates a reservation' do
+  it 'creates a reservation for an event slot' do
+    event_date_id = (user.reservations.pluck(:event_date_id).max || 0) + 1
+    event_slot_id = (user.reservations.pluck(:event_slot_id).max || 0) + 1
+    allow(pantry_finder_api).to receive(:event_date)
+      .and_return(event_date_response)
+
+    expect do
+      post '/api/reservations', reservation: {
+        event_date_id: event_date_id,
+        event_slot_id: event_slot_id
+      }
+    end.to change(Reservation, :count).by(1)
+
+    expect(response.status).to eq(201)
+    response_body = JSON.parse(response.body)
+    expect(response_body['user_id']).to eq(user.id)
+    expect(response_body['event_date_id']).to eq(event_date_id)
+    expect(response_body['event_slot_id']).to eq(event_slot_id)
+  end
+
+  it 'creates a reservation for an event date' do
     event_date_id = (user.reservations.pluck(:event_date_id).max || 0) + 1
     allow(pantry_finder_api).to receive(:event_date)
       .with(event_date_id.to_s).and_return(capacity: Float::INFINITY)
 
     expect do
-      post '/api/reservations', reservation: { event_date_id: event_date_id }
+      post '/api/reservations', reservation: {
+        event_date_id: event_date_id
+      }
     end.to change(Reservation, :count).by(1)
 
     expect(response.status).to eq(201)
@@ -82,5 +103,22 @@ describe Api::ReservationsController, type: :controller do
       .not_to change(Reservation, :count)
 
     expect(response.status).to eq(403)
+  end
+
+  def event_date_response
+    {
+      id: '1', event_id: 663, capacity: Float::INFINITY,
+      event_hours:
+      [
+        {
+          event_hour_id: 7048, capacity: Float::INFINITY, event_slots:
+          [
+            {
+              event_slot_id: '1', capacity: Float::INFINITY
+            }
+          ]
+        }
+      ]
+    }
   end
 end
