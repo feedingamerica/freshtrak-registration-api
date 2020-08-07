@@ -1,0 +1,21 @@
+version: 0.2
+env:
+  variables:
+    # Agree to send anonymized reporting data to lambdagems
+    JETS_AGREE: 'yes'
+phases:
+  install:
+    runtime-versions:
+      ruby: 2.6
+    commands:
+      # Jets doesn't yet support ruby 2.7
+      # Let's temporarily install 2.5 until we can upgrade
+      #   https://github.com/tongueroo/jets/issues/444
+      - rbenv install 2.5.8
+      - gem install bundler
+  build:
+    commands:
+      - echo "Starting ${BUILD_PHASE} deploy using $(ruby --version)"
+      - bundle install
+      - JETS_ENV=$BUILD_PHASE bundle exec jets db:migrate
+      - JETS_ENV=$BUILD_PHASE bundle exec jets deploy
