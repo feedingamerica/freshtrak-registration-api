@@ -8,6 +8,8 @@ class Reservation < ApplicationRecord
   private
 
   def sync_to_pantry_trak
-    PantryTrak::Client.new.create_reservation(id, user_id, event_date_id)
+    PantryTrak::Client.new.create_reservation(
+      id, user_id, event_date_id, event_slot_id
+    )
   end
 end

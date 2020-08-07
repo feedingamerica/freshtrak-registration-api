@@ -15,7 +15,7 @@ class User < ApplicationRecord
 
   before_validation :set_identification_code, on: :create
   before_validation :clean_phone
-  after_commit :sync_to_pantry_trak, on: :create
+  after_commit :sync_to_pantry_trak, on: :update
 
   validates :identification_code, presence: true,
                                   uniqueness: { case_sensitive: true }

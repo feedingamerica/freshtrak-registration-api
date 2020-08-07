@@ -37,7 +37,9 @@ module PantryTrak
         token: public_token,
         time: Time.now.to_i
       }
-      "Bearer #{JWT.encode(payload, hmac_secret, 'HS256', { typ: 'JWT' })}"
+      "Bearer #{JWT.encode(
+        payload, hmac_secret, 'HS256', { alg: 'HS256', typ: 'JWT' }
+      )}"
     end
 
     def hmac_secret
