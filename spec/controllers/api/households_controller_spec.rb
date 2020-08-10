@@ -81,6 +81,12 @@ describe Api::HouseholdsController, type: :controller do
       expect(response.status).to eq(422)
     end
 
+    it 'responds with "unprocessable entity" if household is deleted' do
+      allow_any_instance_of(Household).to receive(:destroy) { false }
+      delete "/api/households/#{household.id}"
+      expect(response.status).to eq(422)
+    end
+
     it 'deletes a household' do
       delete "/api/households/#{household.id}"
       expect(response.status).to eq(200)
