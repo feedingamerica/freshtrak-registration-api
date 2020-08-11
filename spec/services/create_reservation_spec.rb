@@ -1,11 +1,26 @@
 # frozen_string_literal: true
 
 describe CreateReservation do
+  before do
+    allow(PantryTrak::Client).to receive(:new).and_return(pantry_track_client)
+    allow(pantry_track_client).to receive(:create_reservation)
+    allow(Reservation).to receive(:sync_to_pantry_trak)
+
+    allow(pantry_track_client).to receive(:create_user)
+    allow(User).to receive(:sync_to_pantry_trak)
+
+    allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
+    allow(pantry_finder_api).to receive(:event_date)
+      .and_return(event_date_response)
+  end
+
   let(:user) { User.create(user_type: :guest) }
   let(:event_date_id) { unique_event_date_id }
   let(:event_slot_id) { unique_event_slot_id }
 
   let(:pantry_finder_api) { instance_double(PantryFinderApi) }
+
+  let(:pantry_track_client) { instance_double(PantryTrak::Client) }
   let(:capacity) { 100 }
   let(:slot_capacity) { 100 }
 
@@ -16,12 +31,6 @@ describe CreateReservation do
     )
   end
   let(:service_call) { service.call }
-
-  before do
-    allow(PantryFinderApi).to receive(:new).and_return(pantry_finder_api)
-    allow(pantry_finder_api).to receive(:event_date)
-      .and_return(event_date_response)
-  end
 
   it 'creates a reservation' do
     expect { service_call }.to change(Reservation, :count).by(1)

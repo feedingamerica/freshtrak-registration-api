@@ -3,6 +3,7 @@
 describe Api::HouseholdsController, type: :controller do
   context 'with authenticated requests' do
     let(:user) { User.create(user_type: :guest) }
+    let(:pantry_track_client) { instance_double(PantryTrak::Client) }
 
     let(:household) do
       Household.create(number: 2, name: 'Fun House',
@@ -20,6 +21,9 @@ describe Api::HouseholdsController, type: :controller do
     end
 
     before do
+      allow(PantryTrak::Client).to receive(:new).and_return(pantry_track_client)
+      allow(pantry_track_client).to receive(:create_user)
+      allow(User).to receive(:sync_to_pantry_trak)
       sign_in_api(user)
     end
 
