@@ -12,7 +12,8 @@ module Api
 
     # PATCH/PUT /api/user
     def update
-      if current_user.update(user_params)
+      dob = Date.strptime(user_params['date_of_birth'].delete(' '), "%m/%d/%Y")
+      if current_user.update(user_params) && current_user.update(date_of_birth: dob)
         render json: current_user
       else
         render json: current_user.errors, status: :unprocessable_entity
