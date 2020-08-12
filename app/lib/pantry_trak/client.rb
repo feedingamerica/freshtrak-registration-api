@@ -8,18 +8,20 @@ module PantryTrak
       connection.post(create_user_path, user.to_json) do |req|
         req.headers['Authorization'] = bearer_token
       end.body
+    rescue Faraday::Error => e
+      handle_unsucessful_response(e)
     end
 
     def create_reservation(id, user_id, event_date_id, event_slot_id = nil)
       payload = {
-        id: id,
-        user_id: user_id,
-        event_date_id: event_date_id,
-        event_slot_id: event_slot_id
+        id: id, user_id: user_id,
+        event_date_id: event_date_id, event_slot_id: event_slot_id
       }.compact
       connection.post(create_reservation_path, payload) do |req|
         req.headers['Authorization'] = bearer_token
       end.body
+    rescue Faraday::Error => e
+      handle_unsucessful_response(e)
     end
 
     private
@@ -68,6 +70,16 @@ module PantryTrak
       else
         'api/create_freshtrak_reservation_beta.php'
       end
+    end
+
+    def handle_unsucessful_response(response)
+      # TODO: In order to rescue the very specific exceptions,
+      # refs# https://github.com/lostisland/faraday/blob/master/lib/faraday/error.rb
+      # Trying to handle exception and print on logs
+      Jets.logger.info '_' * 10
+      Jets.logger.error "Problem accessing PantryTrak web service,
+        Message: #{response.message}"
+      Jets.logger.info '_' * 10
     end
   end
 end
