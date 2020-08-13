@@ -3,6 +3,7 @@
 describe Api::HouseholdsController, type: :controller do
   context 'with authenticated requests' do
     let(:user) { User.create(user_type: :guest) }
+    let(:pantry_track_client) { instance_double(PantryTrak::Client) }
 
     let(:household) do
       Household.create(number: 2, name: 'Fun House',
@@ -20,6 +21,9 @@ describe Api::HouseholdsController, type: :controller do
     end
 
     before do
+      allow(PantryTrak::Client).to receive(:new).and_return(pantry_track_client)
+      allow(pantry_track_client).to receive(:create_user)
+      allow(User).to receive(:sync_to_pantry_trak)
       sign_in_api(user)
     end
 
@@ -78,6 +82,13 @@ describe Api::HouseholdsController, type: :controller do
       put "/api/households/#{household.id}", household: {
         name: nil
       }
+      expect(response.status).to eq(422)
+    end
+
+    it 'responds with "unprocessable entity" if household is deleted' do
+      allow(Household).to receive(:find_by).and_return(household)
+      allow(household).to receive(:destroy).and_return(false)
+      delete "/api/households/#{household.id}"
       expect(response.status).to eq(422)
     end
 

@@ -15,6 +15,7 @@ class User < ApplicationRecord
 
   before_validation :set_identification_code, on: :create
   before_validation :clean_phone
+  after_commit :sync_to_pantry_trak, on: :update
 
   validates :identification_code, presence: true,
                                   uniqueness: { case_sensitive: true }
@@ -36,5 +37,9 @@ class User < ApplicationRecord
     return unless phone && phone_changed?
 
     self.phone = phone.gsub(/\D/, '')
+  end
+
+  def sync_to_pantry_trak
+    PantryTrak::Client.new.create_user(self)
   end
 end
