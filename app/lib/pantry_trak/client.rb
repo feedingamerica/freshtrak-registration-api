@@ -73,13 +73,9 @@ module PantryTrak
     end
 
     def handle_unsucessful_response(response)
-      # TODO: In order to rescue the very specific exceptions,
-      # refs# https://github.com/lostisland/faraday/blob/master/lib/faraday/error.rb
-      # Trying to handle exception and print on logs
-      Jets.logger.info '_' * 10
+      # handle exception and logging the error.
       Jets.logger.error "Problem accessing PantryTrak web service,
         Message: #{response.message}"
-      Jets.logger.info '_' * 10
     end
   end
 end
