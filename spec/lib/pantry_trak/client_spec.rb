@@ -4,11 +4,8 @@ describe PantryTrak::Client do
   let(:base_url) { 'http://test.com' }
   let(:stubs) { Faraday::Adapter::Test::Stubs.new }
 
-  before do
-    allow(Faraday).to receive(:new).and_return(conn)
-  end
-
   it 'creates reservation on post request' do
+    allow(Faraday).to receive(:new).and_return(conn)
     stubs.post('api/create_freshtrak_reservation_beta.php') do
       [
         200,
@@ -21,6 +18,7 @@ describe PantryTrak::Client do
   end
 
   it 'creates user on post request' do
+    allow(Faraday).to receive(:new).and_return(conn)
     stubs.post('api/create_freshtrak_user_beta.php') do
       [
         200,
@@ -30,6 +28,11 @@ describe PantryTrak::Client do
     end
     response = described_class.new.create_user('guest')
     response.should == user_post_data
+  end
+
+  it 'configures and returns json format' do
+    client = described_class.new.send(:connection)
+    expect(client.adapter).to eq Faraday::Adapter::NetHttp
   end
 
   def conn
