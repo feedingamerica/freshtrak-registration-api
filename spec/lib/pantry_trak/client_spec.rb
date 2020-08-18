@@ -2,32 +2,71 @@
 
 describe PantryTrak::Client do
   let(:base_url) { 'http://test.com' }
+  let(:error_msg) { 'Error raised on logging' }
   let(:stubs) { Faraday::Adapter::Test::Stubs.new }
 
-  it 'creates reservation on post request' do
-    allow(Faraday).to receive(:new).and_return(conn)
-    stubs.post('api/create_freshtrak_reservation_beta.php') do
-      [
-        200,
-        { 'Content-Type' => 'application/json' },
-        reservation_post_data
-      ]
+  context 'with post request' do
+    it 'creates reservation in pantrytrak' do
+      allow(Faraday).to receive(:new).and_return(conn)
+      stubs.post('api/create_freshtrak_reservation_beta.php') do
+        [
+          200,
+          { 'Content-Type' => 'application/json' },
+          reservation_post_data
+        ]
+      end
+      response = described_class.new.create_reservation(1271, '1', '7343', nil)
+      response.should == reservation_post_data
     end
-    response = described_class.new.create_reservation(1271, '1', '7343', nil)
-    response.should == reservation_post_data
+
+    it 'creates user in pantrytrak' do
+      allow(Faraday).to receive(:new).and_return(conn)
+      stubs.post('api/create_freshtrak_user_beta.php') do
+        [
+          200,
+          { 'Content-Type' => 'application/json' },
+          user_post_data
+        ]
+      end
+      response = described_class.new.create_user('guest')
+      response.should == user_post_data
+    end
   end
 
-  it 'creates user on post request' do
-    allow(Faraday).to receive(:new).and_return(conn)
-    stubs.post('api/create_freshtrak_user_beta.php') do
-      [
-        200,
-        { 'Content-Type' => 'application/json' },
-        user_post_data
-      ]
+  context 'with pantrytrak prod url' do
+    let(:prod_mock_env) { instance_double('env', production?: true) }
+
+    before do
+      allow(Jets).to receive(:env) { prod_mock_env }
     end
-    response = described_class.new.create_user('guest')
-    response.should == user_post_data
+
+    it 'returns url that creates freshtrak user' do
+      subject = described_class.new.send(:create_user_path)
+      expect(subject).to eq 'api/create_freshtrak_user.php'
+    end
+
+    it 'returns url that creates freshtrak reservation' do
+      subject = described_class.new.send(:create_reservation_path)
+      expect(subject).to eq 'api/create_freshtrak_reservation.php'
+    end
+  end
+
+  context 'with exception handling' do
+    let(:mock_logger) { instance_double('logger', error: error_msg) }
+
+    before do
+      allow(Jets).to receive(:logger) { mock_logger }
+    end
+
+    it 'returns error on creating reservation' do
+      response = described_class.new.create_reservation(1271, '1', '7343', nil)
+      expect(response).to eq error_msg
+    end
+
+    it 'returns error on creating user ' do
+      response = described_class.new.create_user('guest')
+      expect(response).to eq error_msg
+    end
   end
 
   it 'configures and returns json format' do
