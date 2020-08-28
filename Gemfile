@@ -29,6 +29,9 @@ group :test do
   # rspec test group only or we get the
   # "irb: warn: can't alias context from irb_context warning"
   # when starting jets console
+  gem 'database_cleaner-active_record', '~> 1.8'
+  gem 'factory_bot', '~> 5.1'
+  gem 'faker', '~> 2.11'
   gem 'rspec'
   gem 'simplecov', '~> 0.18.5', require: false
   gem 'simplecov-cobertura', '~> 1.3', require: false
