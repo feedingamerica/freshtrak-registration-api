@@ -32,4 +32,25 @@ end
 RSpec.configure do |c|
   c.include Helpers
   c.include AuthHelper
+  c.include FactoryBot::Syntax::Methods
+
+  c.before(:suite) do
+    FactoryBot.find_definitions
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  c.around do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
+
+  c.before do
+    # Override readonly models so that factory bot can create records
+    # rubocop:disable RSpec/AnyInstance
+    allow_any_instance_of(ApplicationRecord)
+      .to receive(:readonly?).and_return(false)
+    # rubocop:enable RSpec/AnyInstance
+  end
 end
