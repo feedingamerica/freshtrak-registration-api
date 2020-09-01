@@ -2,19 +2,18 @@
 
 # Create a external user and authentication from server side.
 class AuthCallbacksController < ApplicationController
-  before_action :verify_facebook_auth, only: %i[facebook]
-
   def facebook
+    verify_facebook_auth
+
     @identity = Identity.find_by(identity_params)
     if @identity
-      @current_user = @identity.user
-      @authentication = @current_user.authentications
+      set_user_authentications
     else
-      response = ProviderServices.new(identity_params).call
-      @current_user = response.current_user
-      @authentication = response.authentication
+      create_user_authentications
     end
     render json: @authentication
+  rescue StandardError => e
+    render json: handle_unsucessful_response(e), status: :unprocessable_entity
   end
 
   private
@@ -22,11 +21,30 @@ class AuthCallbacksController < ApplicationController
   def identity_params
     {
       'provider_uid': params['userID'],
-      'provider': params['graphDomain']
+      'provider_type': params['graphDomain'],
+      'auth_hash': params['accessToken']
     }
+  end
+
+  def set_user_authentications
+    @current_user = @identity.user
+    @authentication = @current_user.authentications
+  end
+
+  def create_user_authentications
+    @current_user = User.new(user_type: :guest)
+    @identities = @current_user.identities.new(identity_params)
+    @authentication = @current_user.authentications.new
+    @current_user.save
   end
 
   def verify_facebook_auth
     FacebookApi.new.facebook_auth(params['accessToken'], params['userID'])
+  end
+
+  def handle_unsucessful_response(response)
+    # handle exception and logging the error.
+    Jets.logger.error "Problem accessing Facebook web service,
+      Message: #{response.message}"
   end
 end
