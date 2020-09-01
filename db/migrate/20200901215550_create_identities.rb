@@ -5,8 +5,9 @@ class CreateIdentities < ActiveRecord::Migration[6.0]
   def change
     create_table :identities do |t|
       t.references :user, null: false, foreign_key: true
-      t.integer :provider_uid, null: false, limit: 8
-      t.string :provider, null: false
+      t.string :provider_uid, null: false
+      t.string :provider_type, null: false
+      t.string :auth_hash, null: false
       t.timestamps
     end
   end
