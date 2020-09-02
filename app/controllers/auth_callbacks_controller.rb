@@ -3,7 +3,7 @@
 # Create a external user and authentication from server side.
 class AuthCallbacksController < ApplicationController
   def facebook
-    verify_facebook_auth
+    raise StandardError unless verify_facebook_auth
 
     @identity = Identity.find_by(identity_params)
     if @identity
@@ -28,7 +28,7 @@ class AuthCallbacksController < ApplicationController
 
   def set_user_authentications
     @current_user = @identity.user
-    @authentication = @current_user.authentications
+    @authentication = @current_user.authentications.first
   end
 
   def create_user_authentications
