@@ -8,7 +8,7 @@ module Config
     end
 
     def facebook_api_url
-      @facebook_api_url ||= 'https://graph.facebook.com'
+      @facebook_api_url ||= ENV.fetch('FACEBOOK_API_URL')
     end
   end
 end

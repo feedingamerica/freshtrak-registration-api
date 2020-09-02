@@ -16,8 +16,7 @@ describe Config do
 
   context 'with facebook_api_url' do
     before do
-      allow(described_class).to receive(:facebook_api_url)
-        .and_return(fb_api_url)
+      ENV['FACEBOOK_API_URL'] = fb_api_url
     end
 
     it 'returns url' do
