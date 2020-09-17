@@ -9,7 +9,7 @@ class FacebookApi
     @url = url
   end
 
-  def facebook_auth(token, user_id)
+  def verify_facebook_token(token, user_id)
     link =
       "/debug_token?input_token=#{token}&access_token=#{app_id}|#{app_secret}"
     response = client.get(link)

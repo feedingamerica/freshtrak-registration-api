@@ -3,17 +3,16 @@
 # Create a external user and authentication from server side.
 class AuthCallbacksController < ApplicationController
   def facebook
-    raise StandardError unless verify_facebook_auth
+    @verify ||= verify_facebook_auth
 
     @identity = Identity.find_by(identity_params)
-    if @identity
-      set_user_authentications
+    @identity ? set_user_authentications : create_user_authentications
+
+    if @verify
+      render json: @authentication
     else
-      create_user_authentications
+      render json: {}, status: :unauthorized
     end
-    render json: @authentication
-  rescue StandardError => e
-    render json: handle_unsucessful_response(e), status: :unprocessable_entity
   end
 
   private
@@ -39,12 +38,8 @@ class AuthCallbacksController < ApplicationController
   end
 
   def verify_facebook_auth
-    FacebookApi.new.facebook_auth(params['accessToken'], params['userID'])
-  end
-
-  def handle_unsucessful_response(response)
-    # handle exception and logging the error.
-    Jets.logger.error "Problem accessing Facebook web service,
-      Message: #{response.message}"
+    FacebookApi.new.verify_facebook_token(
+      params['accessToken'], params['userID']
+    )
   end
 end

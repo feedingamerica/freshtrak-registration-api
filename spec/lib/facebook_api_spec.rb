@@ -18,7 +18,7 @@ describe FacebookApi do
         fb_response
       ]
     end
-    response = facebook_api.facebook_auth(token, user_id)
+    response = facebook_api.verify_facebook_token(token, user_id)
     expect(response).to be_truthy
   end
 
