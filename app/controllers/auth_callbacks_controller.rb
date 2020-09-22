@@ -4,8 +4,7 @@
 class AuthCallbacksController < ApplicationController
   def facebook
     @verify ||= verify_facebook_auth
-
-    @identity = Identity.find_by(identity_params)
+    @identity = Identity.find_by(provider_uid: params['userID'])
     @identity ? set_user_authentications : create_user_authentications
 
     if @verify
