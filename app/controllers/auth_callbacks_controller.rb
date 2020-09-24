@@ -30,7 +30,7 @@ class AuthCallbacksController < ApplicationController
   end
 
   def create_user_authentications
-    @current_user = User.new(user_type: :guest)
+    @current_user = User.new(user_type: :customer)
     @identities = @current_user.identities.new(identity_params)
     @authentication = @current_user.authentications.new
     @current_user.save
