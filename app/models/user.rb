@@ -5,7 +5,8 @@
 #   stores identifying information for a reservation
 class User < ApplicationRecord
   enum user_type: {
-    guest: 'guest'
+    guest: 'guest',
+    customer: 'customer'
   }
 
   has_many :identities, inverse_of: :user, dependent: :restrict_with_exception
