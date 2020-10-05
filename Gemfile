@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'active_model_serializers', '~> 0.10.10'
 gem 'faraday', '~> 1.0'
 gem 'faraday_middleware', '~> 1.0'
 

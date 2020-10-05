@@ -8,7 +8,9 @@ class AuthCallbacksController < ApplicationController
     @identity ? set_user_authentications : create_user_authentications
 
     if @verify
-      render json: @authentication
+      render json:
+        ActiveModelSerializers::SerializableResource
+          .new(@authentication).as_json
     else
       render json: {}, status: :unauthorized
     end
