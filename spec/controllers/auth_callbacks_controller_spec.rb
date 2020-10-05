@@ -53,7 +53,8 @@ describe AuthCallbacksController, type: :controller do
 
     it 'uses existing authentication token of that user' do
       post 'auth_callbacks/facebook', params: existing_params
-      expect(JSON.parse(response.body)['token']).to eq(authentication.token)
+      expect(JSON.parse(response.body)['authentication']['token'])
+        .to eq(authentication.token)
     end
   end
 
