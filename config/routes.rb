@@ -10,6 +10,7 @@ Jets.application.routes.draw do
   end
 
   post 'auth_callbacks/facebook'
+  post 'twilio/sms'
 
   root 'jets/public#show'
 

@@ -8,6 +8,7 @@ gem 'faraday_middleware', '~> 1.0'
 
 gem 'jets'
 gem 'jwt', '~> 2.2.1'
+gem 'twilio-ruby'
 
 gem 'mysql2', '~> 0.5.2'
 
