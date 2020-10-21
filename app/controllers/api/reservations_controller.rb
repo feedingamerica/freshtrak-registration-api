@@ -57,6 +57,7 @@ module Api
         event_slot_id: reservation_params[:event_slot_id]
       ).call
     end
+    
 
     # Only allow a trusted parameter "white list" through.
     def reservation_params
