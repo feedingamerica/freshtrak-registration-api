@@ -3,6 +3,7 @@ Public API that exposes select tables for the Freshtrak pre-registration process
 
 Built and deployed using the [Ruby on Jets](https://rubyonjets.com/) framework
 
+
 ## Prerequisites
 
 1. [Ruby 2.5.3](https://www.ruby-lang.org/en/downloads/)
