@@ -9,6 +9,9 @@ Jets.application.routes.draw do
     resources :households, only: %i[show create update delete]
   end
 
+  post 'auth_callbacks/facebook'
+  post 'twilio/sms'
+
   root 'jets/public#show'
 
   # The jets/public#show controller can serve static utf8

@@ -32,4 +32,17 @@ end
 RSpec.configure do |c|
   c.include Helpers
   c.include AuthHelper
+  c.include FactoryBot::Syntax::Methods
+
+  c.before(:suite) do
+    FactoryBot.find_definitions
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  c.around do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_07_233301) do
+ActiveRecord::Schema.define(version: 2020_09_01_215550) do
 
   create_table "alt_id_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -189,6 +189,16 @@ ActiveRecord::Schema.define(version: 2020_07_07_233301) do
     t.index ["identification_code"], name: "index_households_on_identification_code", unique: true
   end
 
+  create_table "identities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "provider_uid", null: false
+    t.string "provider_type", null: false
+    t.string "auth_hash", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_identities_on_user_id"
+  end
+
   create_table "location_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "added_by", null: false
@@ -295,6 +305,7 @@ ActiveRecord::Schema.define(version: 2020_07_07_233301) do
   add_foreign_key "household_members", "households"
   add_foreign_key "household_members", "suffixes"
   add_foreign_key "household_members", "users"
+  add_foreign_key "identities", "users"
   add_foreign_key "phone_numbers", "carrier_types"
   add_foreign_key "phone_numbers", "household_members"
   add_foreign_key "phone_numbers", "location_types"

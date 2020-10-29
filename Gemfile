@@ -2,11 +2,13 @@
 
 source 'https://rubygems.org'
 
+gem 'active_model_serializers', '~> 0.10.10'
 gem 'faraday', '~> 1.0'
 gem 'faraday_middleware', '~> 1.0'
 
 gem 'jets'
 gem 'jwt', '~> 2.2.1'
+gem 'twilio-ruby'
 
 gem 'mysql2', '~> 0.5.2'
 
@@ -29,6 +31,9 @@ group :test do
   # rspec test group only or we get the
   # "irb: warn: can't alias context from irb_context warning"
   # when starting jets console
+  gem 'database_cleaner-active_record', '~> 1.8'
+  gem 'factory_bot', '~> 5.1'
+  gem 'faker', '~> 2.11'
   gem 'rspec'
   gem 'simplecov', '~> 0.18.5', require: false
   gem 'simplecov-cobertura', '~> 1.3', require: false
