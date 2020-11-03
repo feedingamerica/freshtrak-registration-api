@@ -3,9 +3,10 @@
 module Twilio
   # Creates Twilio client: sends text messages for users
   class Sms
-    attr_reader :recipent, :message
+    attr_reader :sender, :recipent, :message
 
-    def initialize(recipent, message)
+    def initialize(sender, recipent, message)
+      @sender = sender
       @recipent = recipent
       @message = message
     end
@@ -22,7 +23,7 @@ module Twilio
 
     def send_sms
       connection.messages.create({
-                                   from: phone_number,
+                                   from: sender,
                                    to: recipent,
                                    body: message
                                  })
@@ -40,10 +41,6 @@ module Twilio
 
     def auth_token
       ENV['TWILIO_AUTH_TOKEN']
-    end
-
-    def phone_number
-      ENV['TWILIO_PHONE_NUMBER']
     end
 
     def failure
