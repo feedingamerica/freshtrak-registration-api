@@ -10,7 +10,6 @@ class Reservation < ApplicationRecord
 
   def self.send_remainders
     start_time = Time.current + 1.day
-    puts start_time
     message = 'FreshTrak Remainder: You have successfully ' \
       'registered for FreshTrak'
     event_dates = {}
