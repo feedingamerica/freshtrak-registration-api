@@ -9,6 +9,7 @@ class Reservation < ApplicationRecord
 
   def self.send_remainders
     start_time = Time.current + 1.day
+    puts "Start Time => #{start_time}"
     message = 'FreshTrak Remainder: You have successfully ' \
       'registered for FreshTrak'
     event_dates = {}
@@ -44,10 +45,9 @@ class Reservation < ApplicationRecord
     event_date = event_date_data[:event_date]
 
     event_time = get_event_time(event_date)
-    send_sms =  event_time >= details[:start_time] &&
+    send_sms =  event_time >= (details[:start_time] ) &&
                 event_time <= (details[:start_time] + 4.minutes)
-
-    send_remainder(event_date_data[:twilio_phone_number], phone,
+    send_remainder(details[:reservation], event_date_data[:twilio_phone_number], phone,
                    details[:message], send_sms)
   end
 
@@ -58,8 +58,11 @@ class Reservation < ApplicationRecord
                   "%F #{time_string}")
   end
 
-  def self.send_remainder(from, to, message, send_sms)
-    Twilio::Sms.new(from, to, message).call if to && send_sms
+  def self.send_remainder(reservation, from, to, message, send_sms)
+    if to && send_sms
+      Twilio::Sms.new(from, to, message).call 
+      reservation.update_attribute(:remainder_sent, true)
+    end
   end
 
   def self.fetch_event_info(event_dates, event_date_id)
