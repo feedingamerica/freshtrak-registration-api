@@ -8,7 +8,7 @@ class Reservation < ApplicationRecord
   # after_commit :sync_to_pantry_trak, on: :create
 
   def self.send_remainders
-    start_time = Time.current + 1.day
+    start_time = Time.current
     puts "Start Time => #{start_time}"
     message = 'FreshTrak Remainder: You have successfully ' \
       'registered for FreshTrak'
@@ -29,7 +29,6 @@ class Reservation < ApplicationRecord
     unless event_dates[event_date_id]
       event_dates = fetch_event_info(event_dates, event_date_id)
     end
-
     if event_dates[event_date_id]
       details[:event_date_data] = event_dates[event_date_id]
       check_and_send_remainder(details)
@@ -45,8 +44,8 @@ class Reservation < ApplicationRecord
     event_date = event_date_data[:event_date]
 
     event_time = get_event_time(event_date)
-    send_sms =  event_time >= (details[:start_time] ) &&
-                event_time <= (details[:start_time] + 4.minutes)
+    send_sms =  event_time >= details[:start_time] &&
+                event_time <= details[:start_time].end_of_day
     send_remainder(details[:reservation], event_date_data[:twilio_phone_number], phone,
                    details[:message], send_sms)
   end
