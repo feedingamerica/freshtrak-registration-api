@@ -9,9 +9,8 @@ class Reservation < ApplicationRecord
 
   def self.send_remainders
     start_time = Time.current
-    puts "Start Time => #{start_time}"
-    message = 'FreshTrak Remainder: You have successfully ' \
-      'registered for FreshTrak'
+    message = 'FreshTrak Remainder: You have a reservation ' \
+      'for today'
     event_dates = {}
 
     reservations = Reservation.where({ remainder_sent: false })
@@ -46,8 +45,8 @@ class Reservation < ApplicationRecord
     event_time = get_event_time(event_date)
     send_sms =  event_time >= details[:start_time] &&
                 event_time <= details[:start_time].end_of_day
-    send_remainder(details[:reservation], event_date_data[:twilio_phone_number], phone,
-                   details[:message], send_sms)
+    send_remainder(details[:reservation], event_date_data[:twilio_phone_number],
+                   phone, details[:message], send_sms)
   end
 
   def self.get_event_time(event_date)
@@ -58,17 +57,17 @@ class Reservation < ApplicationRecord
   end
 
   def self.send_remainder(reservation, from, to, message, send_sms)
-    if to && send_sms
-      Twilio::Sms.new(from, to, message).call 
-      reservation.update_attribute(:remainder_sent, true)
-    end
+    return unless to && send_sms
+
+    Twilio::Sms.new(from, to, message).call
+    reservation.update({ remainder_sent: true })
   end
 
   def self.fetch_event_info(event_dates, event_date_id)
+    # ENV["PANTRY_FINDER_API_URL"]
     uri = URI('http://localhost:8888/api/events?event_date_id=' + event_date_id)
     res = Net::HTTP.get_response(uri)
     event_dates[event_date_id] = false
-
     if res.is_a?(Net::HTTPSuccess)
       events = JSON.parse(res.body)['events']
       unless events.empty?
