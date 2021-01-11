@@ -9,9 +9,9 @@
 #
 # set :output, "/path/to/my/cron_log.log"
 
-every :day, at: ["6:00 AM"] do
-    command "bundle exec rake event:event_remainder"
-end  
+every :day, at: ['7:00 AM'] do
+  command 'bundle exec rake event:event_remainder'
+end
 
 # every 5.minutes do
 #   rake "some:great:rake:task"
