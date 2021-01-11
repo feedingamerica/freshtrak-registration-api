@@ -64,17 +64,15 @@ class Reservation < ApplicationRecord
   end
 
   def self.fetch_event_info(event_dates, event_date_id)
-    # ENV["PANTRY_FINDER_API_URL"]
-    uri = URI('http://localhost:8888/api/events?event_date_id=' + event_date_id)
+    uri = URI("#{ENV['PANTRY_FINDER_API_URL']}/api/events?event_date_id=" +
+          event_date_id)
     res = Net::HTTP.get_response(uri)
-    event_dates[event_date_id] = false
     if res.is_a?(Net::HTTPSuccess)
       events = JSON.parse(res.body)['events']
       unless events.empty?
         return update_cached_event_details(event_dates, event_date_id, events)
       end
     end
-
     event_dates
   end
 

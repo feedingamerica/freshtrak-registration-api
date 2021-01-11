@@ -89,14 +89,25 @@ describe Reservation, type: :model do
   context 'when fetch_event_info' do
     let(:event_date_id) { '123' }
     let(:event_dates) { {} }
+    let(:success_response1) { Net::HTTPSuccess.new(1.0, '200', 'OK') }
+    let(:success_response2) { Net::HTTPSuccess.new(1.0, '200', 'OK') }
     let(:error_response) { Net::HTTPError.new('Error', '403') }
 
     before do
       allow(described_class).to receive(:update_cached_event_details)
     end
 
+    it 'call update_cached_event_details with success response1' do
+      allow(success_response1).to receive(:body).and_return('{"events": [{}]}')
+      allow(Net::HTTP).to receive(:get_response).and_return(success_response1)
+
+      described_class.fetch_event_info(event_dates, event_date_id)
+      expect(described_class)
+        .to have_received(:update_cached_event_details)
+    end
+
     it 'not call update_cached_event_details with error response' do
-      allow(Net::HTTP).to receive(:get_reponse).and_return(error_response)
+      allow(Net::HTTP).to receive(:get_response).and_return(error_response)
 
       described_class.fetch_event_info(event_dates, event_date_id)
       expect(described_class)
@@ -105,17 +116,27 @@ describe Reservation, type: :model do
   end
 
   context 'when update_cached_event_details' do
-    let(:event) { {'event_dates' => ['event_date'], 'twilio_phone_number' => '9876543210' } }
-    let(:event2) { {'event_dates' => [], 'twilio_phone_number' => '9876543210' } }
-    let(:expected1) { {'1' => {event_date: 'event_date', twilio_phone_number: '9876543210' } } }
-    
+    let(:event) do
+      { 'event_dates' => ['event_date'],
+        'twilio_phone_number' => '9876543210' }
+    end
+    let(:event2) do
+      { 'event_dates' => [],
+        'twilio_phone_number' => '9876543210' }
+    end
+    let(:expected1) do
+      { '1' => { event_date: 'event_date',
+                 twilio_phone_number: '9876543210' } }
+    end
+
     it 'event date is available' do
-      expect(described_class.update_cached_event_details({}, '1',[ event ])).to eq(expected1)
+      expect(described_class.update_cached_event_details({}, '1', [event]))
+        .to eq(expected1)
     end
 
     it 'event date is not available' do
-      expect(described_class.update_cached_event_details({}, '1',[event2])).to eq({})
+      expect(described_class.update_cached_event_details({}, '1', [event2]))
+        .to eq({})
     end
   end
-  
 end
