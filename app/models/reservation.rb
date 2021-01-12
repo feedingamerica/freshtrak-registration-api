@@ -5,7 +5,7 @@ require 'net/http'
 # Reserves a slot at an agency event for a user
 class Reservation < ApplicationRecord
   belongs_to :user, inverse_of: :reservations
-  # after_commit :sync_to_pantry_trak, on: :create
+  after_commit :sync_to_pantry_trak, on: :create
 
   def self.send_remainders
     start_time = Time.current
