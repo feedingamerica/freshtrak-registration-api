@@ -13,6 +13,8 @@ class TwilioController < ApplicationController
   end
 
   def send_sms_to_recipent
-    Twilio::Sms.new(params[:phone], params[:message]).call
+    Twilio::Sms.new(
+      params[:from_phone_number], params[:to_phone_number], params[:message]
+    ).call
   end
 end

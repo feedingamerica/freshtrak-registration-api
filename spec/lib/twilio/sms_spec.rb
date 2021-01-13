@@ -3,6 +3,7 @@
 describe Twilio::Sms do
   let(:twilio_rest_client) { instance_double(Twilio::REST::Client) }
   let(:twilio_message) { instance_double('twilio message') }
+  let(:sender_no) { '1234567890' }
   let(:recipent_no) { '1234567890' }
   let(:message) { 'Sucessfully registered' }
 
@@ -15,14 +16,14 @@ describe Twilio::Sms do
     end
 
     it 'sends message to recipent' do
-      subject = described_class.new(recipent_no, message).call
+      subject = described_class.new(sender_no, recipent_no, message).call
       expect(subject.success?).to eq(true)
     end
   end
 
   context 'with invalid request' do
     it "doesn't sends message to recipent" do
-      subject = described_class.new(recipent_no, message).call
+      subject = described_class.new(sender_no, recipent_no, message).call
       expect(subject.success?).to eq(false)
     end
   end
