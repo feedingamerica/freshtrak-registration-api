@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Household, type: :model, do
+describe Household, type: :model do
     let(:household) { create(:agency) }
 
     # it 'has many members' do
