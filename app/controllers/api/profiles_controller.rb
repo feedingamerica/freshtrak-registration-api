@@ -12,7 +12,6 @@ module Api
       user_data_hash["last_name"] = user.last_name
       user_data_hash["is_adult"] = user.is_adult
       user_data_hash["dob"] = user.date_of_birth
-      user_data_hash["age"] = Date.today.year - user.date_of_birth.year
       user_data_hash["race"] = user.race
       user_data_hash["ethnicity"] = user.ethnicity
       user_data_hash["gender"] = user.gender
