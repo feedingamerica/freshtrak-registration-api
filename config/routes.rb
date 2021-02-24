@@ -14,10 +14,10 @@ Jets.application.routes.draw do
         get 'user_address', to: "profiles#user_address"
         get 'user_contact_details', to: "profiles#user_contact_details"
         get 'user_vehicle_details', to: "profiles#user_vehicle_details"
-        put 'update_user_data', to: "profiles#update_user_data"
-        put 'update_user_address', to: "profiles#update_user_address"
-        put 'update_user_contact', to: "profiles#update_user_contact"
-        put 'update_user_vehicle', to: "profiles#update_user_vehicle"
+        put 'update_user_data',    to: "profiles#update_user_data"
+        put 'update_user_address', to: "profiles#update_user_data"
+        put 'update_user_contact', to: "profiles#update_user_data"
+        put 'update_user_vehicle', to: "profiles#update_user_data"
       end
     end
   end

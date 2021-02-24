@@ -88,5 +88,4 @@ module Api
                                         ])
     end
   end
->>>>>>> server-registration/master
 end

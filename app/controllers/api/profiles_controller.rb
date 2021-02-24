@@ -56,42 +56,20 @@ module Api
 
     # PUT/PATCH user data
     def update_user_data
-      user = current_user
-      user.update(first_name: params[:first_name], 
-                        middle_name: params[:middle_name],
-                        last_name: params[:last_name],
-                        is_adult: params[:is_adult],
-                        date_of_birth: params[:date_of_birth],
-                        race: params[:race],
-                        ethnicity: params[:ethnicity],
-                        gender: params[:gender])
-      render_message('Changes updated succesfully', 200)
+      if user_params.present? && current_user.update(user_params)
+        render_message("Changes updated succesfully", 200)
+      else
+        render_message("Error in Data", 500)
+      end
     end
 
-    # PUT/PATCH user address
-    def update_user_address
-      user = current_user
-      user.update(address_line_1: params[:address_line_1], 
-                        address_line_2: params[:address_line_2],
-                        city: params[:city],
-                        state: params[:state],
-                        zip_code: params[:zip_code])
-      render_message('Changes updated succesfully', 200)
-    end
+    private
 
-    # PUT/PATCH user contact details
-    def update_user_contact
-      user = current_user
-      user.update(phone: params[:phone], 
-                        email: params[:email])
-      render_message('Changes updated succesfully', 200)
-    end
-
-    # PUT/PATCH user contact details
-    def update_user_vehicle
-      user = current_user
-      user.update(license_plate: params[:license_plate])
-      render_message('Changes updated succesfully', 200)
+    def user_params
+      params.require(:user).permit(
+        :first_name, :middle_name, :last_name,:date_of_birth,
+        :gender, :phone, :email, :address_line_1, :address_line_2,
+        :city, :state, :zip_code, :license_plate, :race, :ethnicity)
     end
   end  
 end

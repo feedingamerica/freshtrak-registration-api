@@ -17,7 +17,7 @@ describe Api::ProfilesController, type: :controller do
       hash_body = []
       hash_body = JSON.parse(response.body)
       expect(hash_body['status_code']).to eq(200)
-      expect(hash_body['data'][0].length).to eq(9)
+      expect(hash_body['data'][0].length).to eq(8)
     end
       
     it 'returns user address details and JSON size' do
@@ -58,7 +58,7 @@ describe Api::ProfilesController, type: :controller do
     end
 
     it 'edits user details' do 
-      put '/api/profiles/update_user_data', params:{
+      put '/api/profiles/update_user_data', user:{
         'first_name' => "John",
         "middle_name" => "J",
         "last_name" => "J",
@@ -74,7 +74,7 @@ describe Api::ProfilesController, type: :controller do
     end
 
     it 'edits user address' do 
-      put '/api/profiles/update_user_address', params:{
+      put '/api/profiles/update_user_data', user:{
         'address_line_1' => "new address 1",
         "address_line_2" => "new address 2",
         "city" => "city",
@@ -87,8 +87,8 @@ describe Api::ProfilesController, type: :controller do
     end
 
     it 'edits user contact details' do 
-      put '/api/profiles/update_user_contact', params:{
-        'phone' => "12345678",
+      put '/api/profiles/update_user_data', user:{
+        'phone' => "1234567890",
         "email" => "newemai@gmail.com"
           }, formart: :json
         hash_body = []
@@ -97,12 +97,21 @@ describe Api::ProfilesController, type: :controller do
     end
 
     it 'edits user vehicle details' do 
-      put '/api/profiles/update_user_vehicle', params:{
+      put '/api/profiles/update_user_data', user:{
         'license_plate' => "new_vehicle_plate"
           }, formart: :json
         hash_body = []
         hash_body = JSON.parse(response.body)
         expect(hash_body['status_code']).to eq(200)
+    end
+
+    it 'responds with unauthorized put' do
+      put '/api/profiles/update_user_data', user:{
+        'license' => "new_vehicle_plate"
+          }, formart: :json
+        hash_body = []
+        hash_body = JSON.parse(response.body)
+        expect(hash_body['status_code']).to eq(500)
     end
   end
 end
