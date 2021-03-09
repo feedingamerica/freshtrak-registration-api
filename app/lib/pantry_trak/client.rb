@@ -61,7 +61,7 @@ module PantryTrak
     end
 
     def create_reservation_path
-      'api/create_freshtrak_reservation_beta.php'
+      'api/create_freshtrak_reservation.php'
     end
 
     def handle_unsucessful_response(response)
