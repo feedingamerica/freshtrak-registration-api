@@ -10,5 +10,9 @@ module Config
     def facebook_api_url
       @facebook_api_url ||= ENV.fetch('FACEBOOK_API_URL')
     end
+
+    def sendgrid_api_key
+      @sendgrid_api_key ||= ENV.fetch('SENDGRID_API_KEY')
+    end
   end
 end

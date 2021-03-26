@@ -8,7 +8,7 @@ describe PantryTrak::Client do
   context 'with post request' do
     it 'creates reservation in pantrytrak' do
       allow(Faraday).to receive(:new).and_return(conn)
-      stubs.post('api/create_freshtrak_reservation_beta.php') do
+      stubs.post('api/create_freshtrak_reservation.php') do
         [
           200,
           { 'Content-Type' => 'application/json' },
@@ -21,7 +21,7 @@ describe PantryTrak::Client do
 
     it 'creates user in pantrytrak' do
       allow(Faraday).to receive(:new).and_return(conn)
-      stubs.post('api/create_freshtrak_user_beta.php') do
+      stubs.post('api/create_freshtrak_user.php') do
         [
           200,
           { 'Content-Type' => 'application/json' },

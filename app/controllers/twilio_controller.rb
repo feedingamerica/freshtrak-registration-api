@@ -12,9 +12,25 @@ class TwilioController < ApplicationController
     end
   end
 
+  def email
+    sent = send_email
+
+    if sent.success?
+      render json: { email_delivered: true }
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
+
   def send_sms_to_recipent
     Twilio::Sms.new(
       params[:from_phone_number], params[:to_phone_number], params[:message]
+    ).call
+  end
+
+  def send_email
+    Twilio::Email.new(
+      params[:from], params[:subject], params[:to], params[:content]
     ).call
   end
 end
