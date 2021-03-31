@@ -9,7 +9,7 @@ module Twilio
       @from = email(from)
       @subject = subject
       @to = email(to)
-      @content = SendGrid::Content.new(type: 'text/plain', value: content)
+      @content = SendGrid::Content.new(type: 'text/html', value: content)
     end
 
     def call
