@@ -10,14 +10,14 @@ Jets.application.routes.draw do
     # resources :profiles, only: :index
     resources :profiles do
       collection do
-        get 'user_data', to: "profiles#user_data"
-        get 'user_address', to: "profiles#user_address"
-        get 'user_contact_details', to: "profiles#user_contact_details"
-        get 'user_vehicle_details', to: "profiles#user_vehicle_details"
-        put 'update_user_data',    to: "profiles#update_user_data"
-        put 'update_user_address', to: "profiles#update_user_data"
-        put 'update_user_contact', to: "profiles#update_user_data"
-        put 'update_user_vehicle', to: "profiles#update_user_data"
+        get 'user_data', to: 'profiles#user_data'
+        get 'user_address', to: 'profiles#user_address'
+        get 'user_contact_details', to: 'profiles#user_contact_details'
+        get 'user_vehicle_details', to: 'profiles#user_vehicle_details'
+        put 'update_user_data',    to: 'profiles#update_user_data'
+        put 'update_user_address', to: 'profiles#update_user_data'
+        put 'update_user_contact', to: 'profiles#update_user_data'
+        put 'update_user_vehicle', to: 'profiles#update_user_data'
       end
     end
   end
