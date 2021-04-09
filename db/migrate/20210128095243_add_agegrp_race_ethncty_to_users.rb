@@ -1,8 +1,13 @@
+# frozen_string_literal: true
+
+# Migration to add age group, race, ethnicity and is_adult fields to User table
 class AddAgegrpRaceEthnctyToUsers < ActiveRecord::Migration[6.0]
   def change
-    add_column :users, :age_group, :string, default: "Adult"
-    add_column :users, :race, :string
-    add_column :users, :ethnicity, :string
-    add_column :users, :is_adult, :boolean
+    change_table :users, bulk: true do |t|
+      t.string :age_group, default: 'Adult'
+      t.string :race
+      t.string :ethnicity
+      t.boolean :is_adult
+    end
   end
 end
