@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_28_095243) do
+ActiveRecord::Schema.define(version: 2021_04_08_123040) do
 
   create_table "alt_id_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -287,6 +287,8 @@ ActiveRecord::Schema.define(version: 2021_01_28_095243) do
     t.string "race"
     t.string "ethnicity"
     t.boolean "is_adult"
+    t.string "cognito_id"
+    t.integer "identity_provider", default: 0
     t.index ["credential_id"], name: "fk_rails_024dac10af"
     t.index ["identification_code"], name: "index_users_on_identification_code", unique: true
     t.index ["user_detail_id"], name: "fk_rails_5de4188fc5"

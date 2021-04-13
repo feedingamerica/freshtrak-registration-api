@@ -20,12 +20,25 @@ module Application
     end
 
     def render_message(message, code)
-      # response.header['Access-Control-Expose-Headers'] = "Content-Range"
-      # response.header['Content-Range'] = 1
       render status: :ok, json: {
         status_code: code,
         message: message
       }
+    end
+
+    def render_data(data, code, message)
+      render status: :ok, json: {
+        status_code: code,
+        data: data,
+        message: message
+      }
+    end
+
+    def render_user_id(message, user, code)
+      render json: {
+        message: message,
+        user: user
+      }, status: code
     end
   end
 end

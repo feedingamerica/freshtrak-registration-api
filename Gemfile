@@ -7,6 +7,7 @@ gem 'faraday', '~> 1.0'
 gem 'faraday_middleware', '~> 1.0'
 
 gem 'jets'
+gem 'jose'
 gem 'jwt', '~> 2.2.1'
 gem 'sendgrid-ruby'
 gem 'twilio-ruby'

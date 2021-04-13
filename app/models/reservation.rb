@@ -5,6 +5,14 @@ class Reservation < ApplicationRecord
   belongs_to :user, inverse_of: :reservations
   after_commit :sync_to_pantry_trak, on: :create
 
+  def self.create_new_reservation(reservation_params)
+    CreateReservation.new(
+      user_id: reservation_params[:user_id],
+      event_date_id: reservation_params[:event_date_id],
+      event_slot_id: reservation_params[:event_slot_id]
+    ).call
+  end
+
   private
 
   def sync_to_pantry_trak
