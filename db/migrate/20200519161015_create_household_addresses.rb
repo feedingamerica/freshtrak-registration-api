@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Migration to create the Household addresses table
 class CreateHouseholdAddresses < ActiveRecord::Migration[6.0]
   def change
     create_table :household_addresses do |t|

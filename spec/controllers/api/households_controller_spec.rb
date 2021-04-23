@@ -9,8 +9,8 @@ describe Api::HouseholdsController, type: :controller do
       Household.create(number: 2, name: 'Fun House',
                        added_by: user.id, last_updated_by: user.id,
                        household_address_attributes: {
-                         line_1: '123 Test St',
-                         line_2: nil,
+                         address_line_1: '123 Test St',
+                         address_line_2: nil,
                          city: 'Irontown',
                          state: 'OH',
                          zip_code: '43214',
@@ -31,8 +31,8 @@ describe Api::HouseholdsController, type: :controller do
       expect do
         post '/api/households', household: { number: 2, name: 'Fun House',
                                              household_address_attributes: {
-                                               line_1: '123 Test St',
-                                               line_2: nil,
+                                               address_line_1: '123 Test St',
+                                               address_line_2: nil,
                                                city: 'Irontown',
                                                state: 'OH',
                                                zip_code: '43214',
