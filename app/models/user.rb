@@ -9,6 +9,12 @@ class User < ApplicationRecord
     customer: 'customer'
   }
 
+  enum identity_provider: {
+    Guest: 0,
+    Facebook: 1,
+    Email_login: 2
+  }
+
   has_many :identities, inverse_of: :user, dependent: :restrict_with_exception
   has_many :authentications, inverse_of: :user, dependent: :destroy
   has_many :reservations, inverse_of: :user, dependent: :restrict_with_exception

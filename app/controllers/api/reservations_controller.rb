@@ -23,9 +23,8 @@ module Api
 
     # POST /api/reservations
     def create
-      result = create_new_reservation
+      result = Reservation.create_new_reservation(reservation_params)
       @reservation = result.reservation
-
       if result.success?
         render json: @reservation, status: :created
       else
@@ -48,14 +47,6 @@ module Api
       @reservation = Reservation.find_by(
         id: params[:id], user_id: current_user.id
       )
-    end
-
-    def create_new_reservation
-      CreateReservation.new(
-        user_id: reservation_params[:user_id],
-        event_date_id: reservation_params[:event_date_id],
-        event_slot_id: reservation_params[:event_slot_id]
-      ).call
     end
 
     # Only allow a trusted parameter "white list" through.
