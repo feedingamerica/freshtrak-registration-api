@@ -25,7 +25,7 @@ class CognitoAuthenticationsController < ApplicationController
       render_user_id('User Already Registered', @cognito_user, '200')
     else
       identities = @claims['identities']
-      create_user(identities)
+      @cognito_user = User.create_cognito_user(@claims, identities)
       if @cognito_user.present?
         render_user_id('User Registered Successfully', @cognito_user, '201')
       end
@@ -46,20 +46,6 @@ class CognitoAuthenticationsController < ApplicationController
   end
 
   private
-
-  # User create function
-  def create_user(identities)
-    identity_value = 2
-    if identities.present?
-      provider = identities[0]['providerName']
-      identity_value = 1 if provider == 'Facebook'
-    end
-    @cognito_user = User.create(
-      user_type: :customer, cognito_id: @claims['sub'],
-      identity_provider: identity_value
-    )
-    @cognito_user
-  end
 
   # User reservation creation
   def create_reservation

@@ -31,6 +31,19 @@ class User < ApplicationRecord
 
   validates :credential_id, presence: true, allow_blank: true
 
+  # Cognito user creation
+  def self.create_cognito_user(claims, identities)
+    identity_value = 2
+    if identities.present?
+      provider = identities[0]['providerName']
+      identity_value = 1 if provider == 'Facebook'
+    end
+    User.create(
+      user_type: :customer, cognito_id: claims['sub'],
+      identity_provider: identity_value
+    )
+  end
+
   private
 
   def set_identification_code
