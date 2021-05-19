@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_16_162811) do
+ActiveRecord::Schema.define(version: 2021_05_19_084204) do
 
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "person_id", null: false
@@ -278,7 +278,10 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "event_slot_id"
+    t.string "license_plate"
+    t.integer "identification_code", null: false
     t.index ["event_date_id"], name: "index_reservations_on_event_date_id"
+    t.index ["identification_code"], name: "index_reservations_on_identification_code", unique: true
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end
 

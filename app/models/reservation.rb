@@ -3,6 +3,11 @@
 # Reserves a slot at an agency event for a user
 class Reservation < ApplicationRecord
   belongs_to :user, inverse_of: :reservations
+
+  before_validation :set_identification_code, on: :create
+  validates :identification_code, presence: true,
+                                  uniqueness: { case_sensitive: true }
+
   after_commit :sync_to_pantry_trak, on: :create
 
   def self.create_new_reservation(reservation_params)
@@ -14,6 +19,14 @@ class Reservation < ApplicationRecord
   end
 
   private
+
+  def set_identification_code
+    loop do
+      self.identification_code = SafeRandom.generate_code(6)
+
+      break unless Reservation.find_by(identification_code: identification_code)
+    end
+  end
 
   def sync_to_pantry_trak
     PantryTrak::Client.new.create_reservation(
