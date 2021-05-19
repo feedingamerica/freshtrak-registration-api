@@ -4,7 +4,7 @@
 class CreateTableEmails < ActiveRecord::Migration[6.1]
   def change
     create_table :emails do |t|
-      t.references :person, foreign_key: true, null: false
+      t.references :contact, foreign_key: true, null: false
       t.string :email, null: false
       t.boolean :permission_to_email, null: false, default: false
       t.index :email, unique: true

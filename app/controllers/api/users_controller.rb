@@ -51,28 +51,41 @@ module Api
 
     def build_and_save_nested_models
       build_identity
-      current_user.save
-      build_person
-      @person.save
-      build_family_and_members
-      @family_members.save
+      build_family
+      build_contacts
+      build_email
+      build_phone
     end
 
     def build_identity
       @current_user.identities.new(identity_params)
+      @current_user.save
     end
 
-    def build_family_and_members
+    def build_family
       @family = Family.new
-      @family_members = @family.family_members.new(person_id: @person.id, is_primary_member: true)
+      @family.save
+    end
+
+    def build_contacts
+      @contact = @family.contacts.new(contact_type: 'email')
+      @contact.save
+    end
+
+    def build_email
+      @email = Email.new(contact_id: @contact.id, email: 'email@gmail.com')
+      @email.save
+    end
+
+    def build_phone
+      @phone = Phone.new(contact_id: @contact.id, phone: '2034916636')
+      @phone.save
     end
 
     def build_person
       @person = Person.new(
         user_id: current_user.id
       )
-      @phone =  @person.phones.new(phone: @auth['phone_number'])
-      @email =  @person.emails.new(email: @auth['cognito:username'])
     end
 
     def identity_params

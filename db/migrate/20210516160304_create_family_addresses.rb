@@ -4,7 +4,7 @@
 class CreateFamilyAddresses < ActiveRecord::Migration[6.1]
   def change
     create_table :addresses do |t|
-      t.references :person, foreign_key: true, null: false
+      t.references :contact, foreign_key: true, null: false
       t.string  :line_1, null: false
       t.string  :line_2
       t.string  :city, null: false

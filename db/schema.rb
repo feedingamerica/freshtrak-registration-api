@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 2021_05_19_084204) do
 
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "person_id", null: false
+    t.bigint "contact_id", null: false
     t.string "line_1", null: false
     t.string "line_2"
     t.string "city", null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
     t.string "zip_code", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["person_id"], name: "index_addresses_on_person_id"
+    t.index ["contact_id"], name: "index_addresses_on_contact_id"
   end
 
   create_table "alt_id_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -85,6 +85,14 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
     t.index ["household_member_id"], name: "index_communication_preferences_on_household_member_id"
   end
 
+  create_table "contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "family_id", null: false
+    t.string "contact_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["family_id"], name: "index_contacts_on_family_id"
+  end
+
   create_table "credentials", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "token", null: false
@@ -99,13 +107,13 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   end
 
   create_table "emails", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "person_id", null: false
+    t.bigint "contact_id", null: false
     t.string "email", null: false
     t.boolean "permission_to_email", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["contact_id"], name: "index_emails_on_contact_id"
     t.index ["email"], name: "index_emails_on_email", unique: true
-    t.index ["person_id"], name: "index_emails_on_person_id"
   end
 
   create_table "event_registration_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -149,13 +157,11 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
 
   create_table "family_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "family_id", null: false
-    t.bigint "person_id", null: false
     t.boolean "is_active", default: false, null: false
     t.boolean "is_primary_member", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["family_id"], name: "index_family_members_on_family_id"
-    t.index ["person_id"], name: "index_family_members_on_person_id"
   end
 
   create_table "genders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -237,6 +243,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
 
   create_table "people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.bigint "family_member_id", null: false
     t.string "first_name"
     t.string "middle_name"
     t.string "last_name"
@@ -245,6 +252,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
     t.integer "last_updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["family_member_id"], name: "index_people_on_family_member_id"
     t.index ["user_id"], name: "index_people_on_user_id"
   end
 
@@ -263,12 +271,12 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   end
 
   create_table "phones", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "person_id", null: false
+    t.bigint "contact_id", null: false
     t.string "phone", null: false
     t.boolean "permission_to_text", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["person_id"], name: "index_phones_on_person_id"
+    t.index ["contact_id"], name: "index_phones_on_contact_id"
     t.index ["phone"], name: "index_phones_on_phone", unique: true
   end
 
@@ -348,31 +356,32 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
     t.index ["user_detail_id"], name: "fk_rails_5de4188fc5"
   end
 
-  add_foreign_key "addresses", "people"
+  add_foreign_key "addresses", "contacts"
   add_foreign_key "alt_ids", "alt_id_types"
   add_foreign_key "alt_ids", "household_members"
   add_foreign_key "authentications", "users"
   add_foreign_key "communication_preferences", "communication_preference_types"
   add_foreign_key "communication_preferences", "household_members"
+  add_foreign_key "contacts", "families"
   add_foreign_key "credentials", "users"
-  add_foreign_key "emails", "people"
+  add_foreign_key "emails", "contacts"
   add_foreign_key "event_registration_members", "event_registrations"
   add_foreign_key "event_registration_members", "household_members"
   add_foreign_key "event_registrations", "event_statuses"
   add_foreign_key "event_registrations", "households"
   add_foreign_key "family_members", "families"
-  add_foreign_key "family_members", "people"
   add_foreign_key "household_addresses", "households"
   add_foreign_key "household_members", "genders"
   add_foreign_key "household_members", "households"
   add_foreign_key "household_members", "suffixes"
   add_foreign_key "household_members", "users"
   add_foreign_key "identities", "users"
+  add_foreign_key "people", "family_members"
   add_foreign_key "people", "users"
   add_foreign_key "phone_numbers", "carrier_types"
   add_foreign_key "phone_numbers", "household_members"
   add_foreign_key "phone_numbers", "location_types"
-  add_foreign_key "phones", "people"
+  add_foreign_key "phones", "contacts"
   add_foreign_key "reservations", "users"
   add_foreign_key "user_details", "users"
   add_foreign_key "users", "credentials"

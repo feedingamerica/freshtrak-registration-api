@@ -2,7 +2,7 @@
 
 # Address for Household Member
 class Address < ApplicationRecord
-  belongs_to :person, inverse_of: :addresses
+  belongs_to :contact, inverse_of: :address
 
   validates :state,
             length: { is: 2 },
