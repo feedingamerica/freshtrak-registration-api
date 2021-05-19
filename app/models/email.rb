@@ -2,7 +2,7 @@
 
 # Email for a Household Member
 class Email < ApplicationRecord
-  belongs_to :person
+  belongs_to :person, inverse_of: :emails
 
   validates :email, presence: true,
                     uniqueness: { case_sensitive: false },

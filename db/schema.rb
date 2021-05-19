@@ -98,6 +98,16 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
     t.index ["user_id"], name: "index_credentials_on_user_id", unique: true
   end
 
+  create_table "emails", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "person_id", null: false
+    t.string "email", null: false
+    t.string "permission_to_email", default: "0", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_emails_on_email", unique: true
+    t.index ["person_id"], name: "index_emails_on_person_id"
+  end
+
   create_table "event_registration_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "event_registration_id"
     t.bigint "household_member_id"
@@ -130,17 +140,17 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
   end
 
   create_table "families", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "seniors_in_family", null: false
-    t.integer "adults_in_family", null: false
-    t.integer "children_in_family", null: false
+    t.integer "seniors_in_family", default: 0, null: false
+    t.integer "adults_in_family", default: 0, null: false
+    t.integer "children_in_family", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "family_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "family_id", null: false
-    t.string "is_active", null: false
-    t.string "is_head_of_family", null: false
+    t.string "is_active", default: "0", null: false
+    t.string "is_head_of_family", default: "0", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["family_id"], name: "index_family_members_on_family_id"
@@ -226,12 +236,12 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
   create_table "people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "family_member_id", null: false
-    t.string "first_name", null: false
+    t.string "first_name"
     t.string "middle_name"
     t.string "last_name"
     t.string "suffix"
     t.string "gender"
-    t.integer "last_updated_by", null: false
+    t.integer "last_updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["family_member_id"], name: "index_people_on_family_member_id"
@@ -255,10 +265,11 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
   create_table "phones", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "person_id", null: false
     t.string "phone", null: false
-    t.string "permission_to_text", null: false
+    t.string "permission_to_text", default: "0", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["person_id"], name: "index_phones_on_person_id"
+    t.index ["phone"], name: "index_phones_on_phone", unique: true
   end
 
   create_table "reservations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -277,15 +288,6 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
     t.integer "last_updated_by", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "table_emails", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "person_id", null: false
-    t.string "email", null: false
-    t.string "permission_to_email", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["person_id"], name: "index_table_emails_on_person_id"
   end
 
   create_table "user_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -350,6 +352,7 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
   add_foreign_key "communication_preferences", "communication_preference_types"
   add_foreign_key "communication_preferences", "household_members"
   add_foreign_key "credentials", "users"
+  add_foreign_key "emails", "people"
   add_foreign_key "event_registration_members", "event_registrations"
   add_foreign_key "event_registration_members", "household_members"
   add_foreign_key "event_registrations", "event_statuses"
@@ -368,7 +371,6 @@ ActiveRecord::Schema.define(version: 2021_05_16_162811) do
   add_foreign_key "phone_numbers", "location_types"
   add_foreign_key "phones", "people"
   add_foreign_key "reservations", "users"
-  add_foreign_key "table_emails", "people"
   add_foreign_key "user_details", "users"
   add_foreign_key "users", "credentials"
   add_foreign_key "users", "user_details"

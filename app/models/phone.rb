@@ -2,8 +2,8 @@
 
 # Phone for Household Member
 class Phone < ApplicationRecord
-  belongs_to :person
+  belongs_to :person, inverse_of: :phones
 
-  validates :phone_number, presence: true,
-                           format: { with: /\A\d{10}\z/ }
+  validates :phone, presence: true,
+                    format: { with: /\A\d{10}\z/ }
 end
