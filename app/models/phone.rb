@@ -4,6 +4,5 @@
 class Phone < ApplicationRecord
   belongs_to :person, inverse_of: :phones
 
-  validates :phone, presence: true,
-                    format: { with: /\A\d{10}\z/ }
+  validates :phone, presence: true
 end

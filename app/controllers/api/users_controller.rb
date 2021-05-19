@@ -52,10 +52,10 @@ module Api
     def build_and_save_nested_models
       build_identity
       current_user.save
-      build_family_and_members
-      @family_members.save
       build_person
       @person.save
+      build_family_and_members
+      @family_members.save
     end
 
     def build_identity
@@ -64,13 +64,12 @@ module Api
 
     def build_family_and_members
       @family = Family.new
-      @family_members = @family.family_members.new
+      @family_members = @family.family_members.new(person_id: @person.id, is_primary_member: true)
     end
 
     def build_person
       @person = Person.new(
-        user_id: current_user.id,
-        family_member_id: @family_members.id
+        user_id: current_user.id
       )
       @phone =  @person.phones.new(phone: @auth['phone_number'])
       @email =  @person.emails.new(email: @auth['cognito:username'])

@@ -5,8 +5,9 @@ class CreateFamilyMembers < ActiveRecord::Migration[6.1]
   def change
     create_table :family_members do |t|
       t.references :family, null: false, foreign_key: true
-      t.string :is_active, null: false, default: false
-      t.string :is_head_of_family, null: false, default: false
+      t.references :person, null: false, foreign_key: true
+      t.boolean :is_active, null: false, default: false
+      t.boolean :is_primary_member, null: false, default: false
       t.timestamps
     end
   end
