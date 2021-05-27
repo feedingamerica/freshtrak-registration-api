@@ -3,12 +3,10 @@
 module Api
   # Exposes the Addresses of user
   class PhonesController < Api::BaseController
-    before_action :find_person, only: %i[update]
+    before_action :set_phone, only: %i[update show]
 
-    # PUT /phone/1
+    # PUT/POST/PATCH  /api/phone
     def update
-      @phone = @person.phones.first
-
       if @phone.update(phone_params)
         render json: @phone
       else
@@ -16,14 +14,24 @@ module Api
       end
     end
 
-    private
-
-    def find_person
-      @person = current_user.person
+    # GET /api/phone
+    def show
+      render json:
+        ActiveModelSerializers::SerializableResource
+          .new(@phone).as_json
     end
 
+    private
+
+    def set_phone
+      @person = current_user.person
+      @primary_family = Family.by_person_id(@person.id).first
+      @phone = @primary_family.contacts.phone.first.phone
+    end
+
+    # Only allow a trusted parameter "white list" through.
     def phone_params
-      params.permit(:phone, :permission_to_text)
+      params.require(:phone).permit(:phone, :permission_to_text)
     end
   end
 end

@@ -5,87 +5,53 @@ module Api
   #   handled as a singular resource
   #   where the user is inferred from the auth token
   class UsersController < Api::BaseController
-    # POST /api/user
-    def create
-      if current_user
-        render json: { message: 'User Already Registered', user: current_user }
-      else
-        @current_user = User.new(user_type: :customer)
-        sign_in
-        if current_user
-          render json: { message: 'User Registered Successfully', user: current_user }
-        end
-      end
-    end
-
-    # GET /api/user
+    # GET /api/users
     def show
       render json: current_user
     end
 
-    # PATCH/PUT /api/user
-    def update
-      if current_user.update(user_params)
-        render json: current_user
+    # POST /api/users/sign_in
+    def sign_in
+      if current_user
+        render json: { message: 'User Already Registered', user: current_user }
       else
-        render json: current_user.errors, status: :unprocessable_entity
+        create_user_with_nested_models
+        if current_user
+          render json: {
+            message: 'User Registered Successfully', user: current_user
+          }
+        end
       end
     end
 
     private
 
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(
-        :first_name, :middle_name, :last_name, :suffix, :date_of_birth,
-        :gender, :phone, :permission_to_text, :email, :permission_to_email,
-        :address_line_1, :address_line_2, :city, :state, :zip_code,
-        :license_plate, :seniors_in_household, :adults_in_household,
-        :children_in_household
-      )
-    end
-
-    def sign_in
-      build_and_save_nested_models
-    end
-
-    def build_and_save_nested_models
-      build_identity
+    def create_user_with_nested_models
+      @current_user = User.create(user_type: :customer)
+      @current_user.identities.create(identity_params)
+      @person = Person.create(user_id: current_user.id)
       build_family
       build_contacts
-      build_email
-      build_phone
-    end
-
-    def build_identity
-      @current_user.identities.new(identity_params)
-      @current_user.save
     end
 
     def build_family
-      @family = Family.new
-      @family.save
+      @family = Family.create
+      @family_member = FamilyMember.create(
+        family_id: @family.id, person_id: @person.id,
+        is_primary_member: true
+      )
     end
 
     def build_contacts
-      @contact = @family.contacts.new(contact_type: 'email')
-      @contact.save
-    end
-
-    def build_email
-      @email = Email.new(contact_id: @contact.id, email: 'email@gmail.com')
-      @email.save
-    end
-
-    def build_phone
-      @phone = Phone.new(contact_id: @contact.id, phone: '2034916636')
-      @phone.save
-    end
-
-    def build_person
-      @person = Person.new(
-        user_id: current_user.id
-      )
+      %w[email phone].each do |type|
+        if type == 'email'
+          email_obj = @family.contacts.create(contact_type: type)
+          Email.create(contact_id: email_obj.id, email: @auth['email'])
+        else
+          phone_obj = @family.contacts.create(contact_type: type)
+          Phone.create(contact_id: phone_obj.id, phone: @auth['phone_number'])
+        end
+      end
     end
 
     def identity_params

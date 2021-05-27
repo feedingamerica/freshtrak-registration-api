@@ -4,12 +4,16 @@ Jets.application.routes.draw do
   resources :guest_authentications, only: :create
   namespace :api do
     resources :reservations, only: %i[index show create delete]
-    resource :user, only: %i[create show]
-    resource :family, only: %i[create]
-    resource :person, only: %i[update]
-    resource :address, only: %i[create update]
-    resource :phone, only: %i[update]
-    resource :email, only: %i[update]
+    resources :users, only: :show do
+      collection do
+        post :sign_in
+      end
+    end
+    resource :person, only: %i[show update]
+    resource :family, only: %i[show update]
+    resource :address, only: %i[show create]
+    resource :phone, only: %i[show update]
+    resource :email, only: %i[show update]
     resources :households, only: %i[show create update delete]
   end
 

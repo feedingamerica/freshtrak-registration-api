@@ -3,12 +3,10 @@
 module Api
   # Exposes the Emails of user
   class EmailsController < Api::BaseController
-    before_action :find_person, only: %i[update]
+    before_action :set_email, only: %i[update show]
 
-    # PUT /phone/1
+    # PUT/POST/PATCH  /api/email
     def update
-      @email = @person.emails.first
-
       if @email.update(email_params)
         render json: @email
       else
@@ -16,14 +14,24 @@ module Api
       end
     end
 
-    private
-
-    def find_person
-      @person = current_user.person
+    # GET /api/email
+    def show
+      render json:
+        ActiveModelSerializers::SerializableResource
+          .new(@email).as_json
     end
 
+    private
+
+    def set_email
+      person = current_user.person
+      family = Family.by_person_id(person.id).first
+      @email = family.contacts.email.first.email
+    end
+
+    # Only allow a trusted parameter "white list" through.
     def email_params
-      params.permit(:email, :permission_to_email)
+      params.require(:email).permit(:email, :permission_to_email)
     end
   end
 end

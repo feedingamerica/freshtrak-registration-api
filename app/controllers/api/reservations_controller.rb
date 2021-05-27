@@ -52,8 +52,10 @@ module Api
     # Only allow a trusted parameter "white list" through.
     def reservation_params
       params.require(:reservation)
-            .permit(:event_date_id, :event_slot_id)
-            .merge(user_id: current_user.id)
+            .permit(
+              :event_date_id, :event_slot_id,
+              :license_plate, :identification_code
+            ).merge(user_id: current_user.id)
     end
   end
 end

@@ -157,11 +157,13 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
 
   create_table "family_members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "family_id", null: false
-    t.boolean "is_active", default: false, null: false
+    t.bigint "person_id", null: false
+    t.boolean "is_active", default: true, null: false
     t.boolean "is_primary_member", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["family_id"], name: "index_family_members_on_family_id"
+    t.index ["person_id"], name: "index_family_members_on_person_id"
   end
 
   create_table "genders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -242,17 +244,16 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   end
 
   create_table "people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "family_member_id", null: false
+    t.bigint "user_id"
     t.string "first_name"
     t.string "middle_name"
     t.string "last_name"
     t.string "suffix"
     t.string "gender"
+    t.date "date_of_birth"
     t.integer "last_updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["family_member_id"], name: "index_people_on_family_member_id"
     t.index ["user_id"], name: "index_people_on_user_id"
   end
 
@@ -370,13 +371,13 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   add_foreign_key "event_registrations", "event_statuses"
   add_foreign_key "event_registrations", "households"
   add_foreign_key "family_members", "families"
+  add_foreign_key "family_members", "people"
   add_foreign_key "household_addresses", "households"
   add_foreign_key "household_members", "genders"
   add_foreign_key "household_members", "households"
   add_foreign_key "household_members", "suffixes"
   add_foreign_key "household_members", "users"
   add_foreign_key "identities", "users"
-  add_foreign_key "people", "family_members"
   add_foreign_key "people", "users"
   add_foreign_key "phone_numbers", "carrier_types"
   add_foreign_key "phone_numbers", "household_members"
