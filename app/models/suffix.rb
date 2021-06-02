@@ -2,6 +2,6 @@
 
 # Suffix reference class
 class Suffix < ApplicationRecord
-  # Validations for the model
+  # Validation for the model
   validates :name, presence: true
 end
