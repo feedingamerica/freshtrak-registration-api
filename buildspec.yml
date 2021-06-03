@@ -18,4 +18,5 @@ phases:
       - echo "Starting ${BUILD_PHASE} deploy using $(ruby --version)"
       - bundle install
       - JETS_ENV=$BUILD_PHASE bundle exec jets db:migrate
+      - JETS_ENV=$BUILD_PHASE bundle exec jets configure $TOKEN
       - JETS_ENV=$BUILD_PHASE bundle exec jets deploy
