@@ -43,23 +43,40 @@ module Api
     end
 
     def build_contacts
-      %w[email phone].each do |type|
-        if type == 'email'
-          email_obj = @family.contacts.create(contact_type: type)
-          Email.create(contact_id: email_obj.id, email: @auth['email'])
-        else
-          phone_obj = @family.contacts.create(contact_type: type)
-          Phone.create(contact_id: phone_obj.id, phone: @auth['phone_number'])
+      Contact.contact_types.each_key do |c_type|
+        if c_type == 'email'
+          create_email(c_type)
+        elsif c_type == 'phone'
+          create_phone(c_type)
         end
       end
     end
 
     def identity_params
-      {
-        'provider_uid': @auth['sub'],
-        'provider_type': @auth['identities'] ? @auth['identities'][0]['providerName'].downcase : 'cognito',
+      provider_type = if @auth['identities']
+                        @auth['identities'][0]['providerName'].downcase
+                      else
+                        'cognito'
+                      end
+      id_params = {
+        'provider_uid': @auth['sub'], 'provider_type': provider_type,
         'auth_hash': ''
       }
+      id_params
+    end
+
+    def create_email(type)
+      email_obj = @family.contacts.create(contact_type: type)
+      Email.create(
+        contact_id: email_obj.id, email: @auth['email'], is_primary: true
+      )
+    end
+
+    def create_phone(type)
+      phone_obj = @family.contacts.create(contact_type: type)
+      Phone.create(
+        contact_id: phone_obj.id, phone: @auth['phone_number'], is_primary: true
+      )
     end
   end
 end

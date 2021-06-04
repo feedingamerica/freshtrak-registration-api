@@ -3,8 +3,10 @@
 # Migration to add identification field to reservations table.
 class AddIdentificationCodeToReservation < ActiveRecord::Migration[6.1]
   def change
-    add_column :reservations, :license_plate, :string
-    add_column :reservations, :identification_code, :integer, null: false
+    change_table :reservations, bulk: true do |t|
+      t.string :license_plate
+      t.string :identification_code, null: false
+    end
     add_index :reservations, :identification_code, unique: true
   end
 end

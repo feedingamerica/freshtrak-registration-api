@@ -109,6 +109,8 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   create_table "emails", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "contact_id", null: false
     t.string "email", null: false
+    t.string "kind"
+    t.boolean "is_primary"
     t.boolean "permission_to_email", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -274,6 +276,8 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   create_table "phones", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "contact_id", null: false
     t.string "phone", null: false
+    t.string "kind"
+    t.boolean "is_primary"
     t.boolean "permission_to_text", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -288,7 +292,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "event_slot_id"
     t.string "license_plate"
-    t.integer "identification_code", null: false
+    t.string "identification_code", null: false
     t.index ["event_date_id"], name: "index_reservations_on_event_date_id"
     t.index ["identification_code"], name: "index_reservations_on_identification_code", unique: true
     t.index ["user_id"], name: "index_reservations_on_user_id"

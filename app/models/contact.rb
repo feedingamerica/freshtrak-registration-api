@@ -8,8 +8,8 @@ class Contact < ApplicationRecord
     address: 'address'
   }
   belongs_to :family, inverse_of: :contacts
-  has_one :email, inverse_of: :contact, dependent: :destroy
-  has_one :phone, inverse_of: :contact, dependent: :destroy
+  has_many :emails, inverse_of: :contact, dependent: :destroy
+  has_many :phones, inverse_of: :contact, dependent: :destroy
   has_one :address, inverse_of: :contact, dependent: :destroy
 
   validates :contact_type, presence: true
