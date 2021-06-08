@@ -7,7 +7,7 @@ module Api
 
     # POST api/address
     def create
-      @address = Address.first_or_initialize(address_params)
+      @address = Address.where(address_params).first_or_initialize
       if @address.save
         render json: @address
       else
@@ -17,6 +17,8 @@ module Api
 
     # GET /api/address
     def show
+      @address = @contact.address
+
       render json:
         ActiveModelSerializers::SerializableResource
           .new(@address).as_json
@@ -27,7 +29,6 @@ module Api
     def set_contact
       family = Family.by_person_id(current_user.person.id).first
       @contact = family.contacts.where(contact_type: 'address').first_or_create
-      @address = @contact.address
     end
 
     # Only allow a trusted parameter "white list" through.
