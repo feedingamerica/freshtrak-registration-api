@@ -3,35 +3,54 @@
 module Api
   # Exposes the Emails of user
   class EmailsController < Api::BaseController
-    before_action :set_email, only: %i[update show]
+    before_action :set_contact, only: %i[create index]
+    before_action :find_email, only: %i[show]
 
-    # PUT/POST/PATCH  /api/email
-    def update
-      if @email.update(email_params)
-        render json: @email
+    # POST  /api/emails
+    def create
+      @email = Email.new(email_params)
+      if @email.save
+        render json: ActiveModelSerializers::SerializableResource
+          .new(@email).as_json
       else
-        render json: @email.errors, status: :unprocessable_entity
+        render json: { errors: @email.errors }
       end
     end
 
-    # GET /api/email
+    # GET /emails/:id
     def show
+      if @email
+        render json: ActiveModelSerializers::SerializableResource
+          .new(@email).as_json
+      else
+        render json: {}, status: :not_found
+      end
+    end
+
+    # GET /api/emails
+    def index
+      @emails = @contact.emails
+
       render json:
         ActiveModelSerializers::SerializableResource
-          .new(@email).as_json
+          .new(@emails).as_json
     end
 
     private
 
-    def set_email
-      person = current_user.person
-      family = Family.by_person_id(person.id).first
-      @email = family.contacts.email.first.email
+    def find_email
+      @email = Email.find_by(id: params[:id])
+    end
+
+    def set_contact
+      @contact = current_user.person.contacts.where(contact_type: 'email').first_or_create
     end
 
     # Only allow a trusted parameter "white list" through.
     def email_params
-      params.require(:email).permit(:email, :permission_to_email)
+      params.require(:email).permit(
+        :email, :is_primary, :permission_to_email
+      ).merge(contact_id: @contact.id)
     end
   end
 end

@@ -9,11 +9,11 @@ Jets.application.routes.draw do
         post :sign_in
       end
     end
-    resource :person, only: %i[show update]
+    resources :people, only: %i[create update show]
     resource :family, only: %i[show update]
     resource :address, only: %i[show create]
-    resource :phone, only: %i[show update]
-    resource :email, only: %i[show update]
+    resources :phones, only: %i[create show index]
+    resources :emails, only: %i[create show index]
     resources :households, only: %i[show create update delete]
   end
 

@@ -86,11 +86,11 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   end
 
   create_table "contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "family_id", null: false
+    t.bigint "person_id", null: false
     t.string "contact_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["family_id"], name: "index_contacts_on_family_id"
+    t.index ["person_id"], name: "index_contacts_on_person_id"
   end
 
   create_table "credentials", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -109,8 +109,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   create_table "emails", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "contact_id", null: false
     t.string "email", null: false
-    t.string "kind"
-    t.boolean "is_primary"
+    t.boolean "is_primary", default: false, null: false
     t.boolean "permission_to_email", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -276,8 +275,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   create_table "phones", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "contact_id", null: false
     t.string "phone", null: false
-    t.string "kind"
-    t.boolean "is_primary"
+    t.boolean "is_primary", default: false, null: false
     t.boolean "permission_to_text", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -367,7 +365,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
   add_foreign_key "authentications", "users"
   add_foreign_key "communication_preferences", "communication_preference_types"
   add_foreign_key "communication_preferences", "household_members"
-  add_foreign_key "contacts", "families"
+  add_foreign_key "contacts", "people"
   add_foreign_key "credentials", "users"
   add_foreign_key "emails", "contacts"
   add_foreign_key "event_registration_members", "event_registrations"

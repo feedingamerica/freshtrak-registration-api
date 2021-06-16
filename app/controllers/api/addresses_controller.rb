@@ -9,7 +9,7 @@ module Api
     def create
       @address = Address.where(address_params).first_or_initialize
       if @address.save
-        render json: @address
+        render json: serialized_address
       else
         render json: @address.errors, status: :unprocessable_entity
       end
@@ -19,16 +19,13 @@ module Api
     def show
       @address = @contact.address
 
-      render json:
-        ActiveModelSerializers::SerializableResource
-          .new(@address).as_json
+      render json: serialized_address
     end
 
     private
 
     def set_contact
-      family = Family.by_person_id(current_user.person.id).first
-      @contact = family.contacts.where(contact_type: 'address').first_or_create
+      @contact = current_user.person.contacts.where(contact_type: 'address').first_or_create
     end
 
     # Only allow a trusted parameter "white list" through.
@@ -36,6 +33,12 @@ module Api
       params.require(:address).permit(
         :line_1, :line_2, :city, :state, :zip_code
       ).merge(contact_id: @contact.id)
+    end
+
+    def serialized_address
+      return unless @address
+
+      ActiveModelSerializers::SerializableResource.new(@address).as_json
     end
   end
 end

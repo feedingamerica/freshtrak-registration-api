@@ -1,37 +1,56 @@
 # frozen_string_literal: true
 
 module Api
-  # Exposes the Addresses of user
+  # Exposes the Phones of user
   class PhonesController < Api::BaseController
-    before_action :set_phone, only: %i[update show]
+    before_action :set_contact, only: %i[create index]
+    before_action :find_phone, only: %i[show]
 
-    # PUT/POST/PATCH  /api/phone
-    def update
-      if @phone.update(phone_params)
-        render json: @phone
+    # POST  /api/emails
+    def create
+      @phone = Phone.new(phone_params)
+      if @phone.save
+        render json: ActiveModelSerializers::SerializableResource
+          .new(@phone).as_json
       else
-        render json: @phone.errors, status: :unprocessable_entity
+        render json: { errors: @phone.errors }
       end
     end
 
-    # GET /api/phone
+    # GET /emails/:id
     def show
+      if @phone
+        render json: ActiveModelSerializers::SerializableResource
+          .new(@phone).as_json
+      else
+        render json: {}, status: :not_found
+      end
+    end
+
+    # GET /api/emails
+    def index
+      @phones = @contact.phones
+
       render json:
         ActiveModelSerializers::SerializableResource
-          .new(@phone).as_json
+          .new(@phones).as_json
     end
 
     private
 
-    def set_phone
-      @person = current_user.person
-      @primary_family = Family.by_person_id(@person.id).first
-      @phone = @primary_family.contacts.phone.first.phone
+    def find_phone
+      @phone = Phone.find_by(id: params[:id])
+    end
+
+    def set_contact
+      @contact = current_user.person.contacts.where(contact_type: 'phone').first_or_create
     end
 
     # Only allow a trusted parameter "white list" through.
     def phone_params
-      params.require(:phone).permit(:phone, :permission_to_text)
+      params.require(:phone).permit(
+        :phone, :is_primary, :permission_to_phone
+      ).merge(contact_id: @contact.id)
     end
   end
 end

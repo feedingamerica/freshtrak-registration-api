@@ -6,8 +6,7 @@ class CreatePhones < ActiveRecord::Migration[6.1]
     create_table :phones do |t|
       t.references :contact, foreign_key: true, null: false
       t.string :phone, null: false
-      t.string :kind
-      t.boolean :is_primary
+      t.boolean :is_primary, null: false, default: false
       t.boolean :permission_to_text, null: false, default: false
       t.index :phone, unique: true
       t.timestamps

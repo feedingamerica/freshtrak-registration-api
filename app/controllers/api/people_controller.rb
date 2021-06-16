@@ -3,12 +3,24 @@
 module Api
   # Exposes/Updates the Persons data
   class PeopleController < Api::BaseController
-    before_action :set_person, only: %i[update show]
+    before_action :find_person, only: %i[update show]
 
-    # PUT/POST/PATCH  /api/person
+    # POST /api/people
+    def create
+      @person = Person.new(person_params)
+
+      if @person.save
+        render json: ActiveModelSerializers::SerializableResource
+          .new(@person, contacts: false).as_json
+      else
+        render json: @person.errors, status: :unprocessable_entity
+      end
+    end
+    # PUT/PATCH  /api/people
     def update
       if @person.update(person_params)
-        render json: @person
+        render json: ActiveModelSerializers::SerializableResource
+          .new(@person, contacts: false).as_json
       else
         render json: @person.errors, status: :unprocessable_entity
       end
@@ -23,8 +35,8 @@ module Api
 
     private
 
-    def set_person
-      @person = current_user.person
+    def find_person
+      @person = Person.find(params['id'])
     end
 
     # Only allow a trusted parameter "white list" through.
