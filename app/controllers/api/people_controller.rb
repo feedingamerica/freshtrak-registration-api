@@ -16,6 +16,7 @@ module Api
         render json: @person.errors, status: :unprocessable_entity
       end
     end
+
     # PUT/PATCH  /api/people
     def update
       if @person.update(person_params)
