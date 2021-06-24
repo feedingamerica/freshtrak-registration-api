@@ -11,9 +11,9 @@ Jets.application.routes.draw do
     end
     resources :people, only: %i[create update show]
     resource :family, only: %i[show update]
-    resource :address, only: %i[show create]
-    resources :phones, only: %i[create show index]
-    resources :emails, only: %i[create show index]
+    resources :addresses
+    resources :phones
+    resources :emails
     resources :households, only: %i[show create update delete]
   end
 
