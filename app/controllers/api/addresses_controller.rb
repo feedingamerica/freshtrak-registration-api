@@ -10,7 +10,11 @@ module Api
     def index
       @address = @contact.address
 
-      render json: serialized_address
+      if @address.present?
+        render json: serialized_address
+      else
+        render json: {}, status: :not_found
+      end
     end
 
     # POST api/addresses
@@ -19,17 +23,13 @@ module Api
       if @address.save
         render json: serialized_address
       else
-        render json: @address.errors, status: :unprocessable_entity
+        render json: { errors: @address.errors }, status: :unprocessable_entity
       end
     end
 
     # GET /api/addresses/:id
     def show
-      if @address
-        render json: serialized_address
-      else
-        render json: {}, status: :not_found
-      end
+      render json: serialized_address
     end
 
     # PUT /api/addresses/:id
@@ -37,17 +37,15 @@ module Api
       if @address.update(address_params)
         render json: serialized_address
       else
-        render json: @address.errors, status: :unprocessable_entity
+        render json: { errors: @address.errors }, status: :unprocessable_entity
       end
     end
 
     # DELETE  api/addresses/:id
     def delete
-      if @address.destroy
-        render json: { deleted: true }
-      else
-        render json: @address.errors, status: :unprocessable_entity
-      end
+      @address.destroy
+
+      render json: { deleted: true }
     end
 
     private

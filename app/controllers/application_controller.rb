@@ -2,6 +2,7 @@
 
 # Application Controller
 class ApplicationController < Jets::Controller::Base
+  include Error::ErrorHandler
   # include Application::ResponseHandler
   # Authenticate the incoming Cognito User
   # def cognito_user_authenticate

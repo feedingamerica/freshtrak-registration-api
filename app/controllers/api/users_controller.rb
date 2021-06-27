@@ -7,7 +7,7 @@ module Api
   class UsersController < Api::BaseController
     before_action :find_user, only: %i[sign_in]
 
-    # GET /api/users
+    # GET /api/users/:id
     def show
       render json: serialized_user
     end

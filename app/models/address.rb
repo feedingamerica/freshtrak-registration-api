@@ -5,10 +5,8 @@ class Address < ApplicationRecord
   belongs_to :contact, inverse_of: :address
 
   validates :state,
-            length: { is: 2 },
-            on: :create
+            length: { is: 2 }
 
   validates :zip_code,
-            length: { is: 5 },
-            on: :create
+            length: { is: 5 }
 end
