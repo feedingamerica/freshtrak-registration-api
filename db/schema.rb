@@ -251,6 +251,8 @@ ActiveRecord::Schema.define(version: 2021_05_19_084204) do
     t.string "last_name"
     t.string "suffix"
     t.string "gender"
+    t.string "race"
+    t.string "ethnicity"
     t.date "date_of_birth"
     t.integer "last_updated_by"
     t.datetime "created_at", precision: 6, null: false

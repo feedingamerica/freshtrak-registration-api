@@ -10,7 +10,11 @@ module Api
     def index
       @phone = @contact.phones
 
-      render json: serialized_phone
+      if @phone.present?
+        render json: serialized_phone
+      else
+        render json: {}, status: :not_found
+      end
     end
 
     # POST  api/phones
@@ -19,7 +23,7 @@ module Api
       if @phone.save
         render json: serialized_phone
       else
-        render json: { errors: @phone.errors }
+        render json: { errors: @phone.errors }, status: :unprocessable_entity
       end
     end
 

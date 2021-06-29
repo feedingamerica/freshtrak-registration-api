@@ -32,18 +32,18 @@ class User < ApplicationRecord
 
   validates :credential_id, presence: true, allow_blank: true
 
-  # Cognito user creation
-  def self.create_cognito_user(claims, identities)
-    identity_value = 2
-    if identities.present?
-      provider = identities[0]['providerName']
-      identity_value = 1 if provider == 'Facebook'
-    end
-    User.create(
-      user_type: :customer, cognito_id: claims['sub'],
-      identity_provider: identity_value
-    )
-  end
+  # Cognito user creation - we are no longer using this method
+  # def self.create_cognito_user(claims, identities)
+  #   identity_value = 2
+  #   if identities.present?
+  #     provider = identities[0]['providerName']
+  #     identity_value = 1 if provider == 'Facebook'
+  #   end
+  #   User.create(
+  #     user_type: :customer, cognito_id: claims['sub'],
+  #     identity_provider: identity_value
+  #   )
+  # end
 
   private
 
@@ -61,7 +61,8 @@ class User < ApplicationRecord
     self.phone = phone.gsub(/\D/, '')
   end
 
-  def sync_to_pantry_trak
-    PantryTrak::Client.new.create_user(self)
-  end
+  # TODO ::  this method needs to be updated as per new Data Model changes to sync_to_pantry_trak
+  # def sync_to_pantry_trak
+  #   PantryTrak::Client.new.create_user(self)
+  # end
 end

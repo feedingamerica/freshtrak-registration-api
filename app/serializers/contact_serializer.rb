@@ -2,8 +2,9 @@
 
 # Defines Contact attributes to be returned in JSON
 class ContactSerializer < ApplicationSerializer
-  attributes :id, :contact_type
+  attributes :id, :person_id, :contact_type, :created_at, :updated_at
 
-  has_many :emails, if: -> { object.emails.present? }
-  has_many :phones, if: -> { object.phones.present? }
+  has_many :emails
+  has_many :phones
+  has_many :address
 end

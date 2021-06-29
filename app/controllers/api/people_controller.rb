@@ -11,7 +11,7 @@ module Api
 
       if @person.save
         render json: ActiveModelSerializers::SerializableResource
-          .new(@person, contacts: false).as_json
+          .new(@person).as_json
       else
         render json: @person.errors, status: :unprocessable_entity
       end
@@ -21,7 +21,7 @@ module Api
     def update
       if @person.update(person_params)
         render json: ActiveModelSerializers::SerializableResource
-          .new(@person, contacts: false).as_json
+          .new(@person).as_json
       else
         render json: @person.errors, status: :unprocessable_entity
       end
@@ -31,7 +31,7 @@ module Api
     def show
       render json:
         ActiveModelSerializers::SerializableResource
-          .new(@person, contacts: true).as_json
+          .new(@person).as_json
     end
 
     private
