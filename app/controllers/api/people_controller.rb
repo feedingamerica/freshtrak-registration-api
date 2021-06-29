@@ -31,7 +31,7 @@ module Api
     def show
       render json:
         ActiveModelSerializers::SerializableResource
-          .new(@person).as_json
+          .new(@person, contacts: true).as_json
     end
 
     private
