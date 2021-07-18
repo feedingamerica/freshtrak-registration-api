@@ -29,11 +29,7 @@ module Api
 
     # GET  api/phones/:id
     def show
-      if @phone
-        render json: serialized_phone
-      else
-        render json: {}, status: :not_found
-      end
+      render json: serialized_phone
     end
 
     # PUT/POST/PATCH  api/phones/:id
@@ -57,7 +53,7 @@ module Api
     private
 
     def find_phone
-      @phone = Phone.find_by(id: params[:id])
+      @phone = Phone.find(params[:id])
     end
 
     def find_contact

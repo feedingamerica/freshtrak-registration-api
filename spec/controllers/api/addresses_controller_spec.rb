@@ -34,8 +34,8 @@ describe Api::AddressesController, type: :controller do
 
         expect(response.status).to eq 422
         response_body = JSON.parse(response.body)
-        response = response_body['errors']
-        expect(response).to eq(
+        errors_response = response_body['errors']
+        expect(errors_response).to eq(
           { 'state' => ['is the wrong length (should be 2 characters)'] }
         )
       end
@@ -45,10 +45,9 @@ describe Api::AddressesController, type: :controller do
       it 'lists addresses of users' do
         get '/api/addresses'
 
-        expect(response.status).to eq 200
         response_body = JSON.parse(response.body)
-        response = response_body['address']
-        expect(response).to eq(JSON.parse(address.to_json))
+        address_response = response_body['address']
+        expect(address_response).to eq(JSON.parse(address.to_json))
       end
 
       it 'responds with empty json if addresses not found' do
@@ -65,8 +64,8 @@ describe Api::AddressesController, type: :controller do
 
         expect(response.status).to eq 200
         response_body = JSON.parse(response.body)
-        response = response_body['address']
-        expect(response).to eq(JSON.parse(address.to_json))
+        address_response = response_body['address']
+        expect(address_response).to eq(JSON.parse(address.to_json))
       end
 
       it 'responds with "record_not_found" if address does not exist' do
@@ -88,10 +87,12 @@ describe Api::AddressesController, type: :controller do
         }
 
         expect(response.status).to eq 200
+
         response_body = JSON.parse(response.body)
-        response = response_body['address']
-        expect(response['line_1']).to eq '915 north avenue'
-        expect(response).not_to eq(JSON.parse(address.to_json))
+        address_response = response_body['address']
+
+        expect(address_response['line_1']).to eq '915 north avenue'
+        expect(address_response).not_to eq(JSON.parse(address.to_json))
       end
 
       it 'does not update an address with invalid params' do
@@ -101,8 +102,8 @@ describe Api::AddressesController, type: :controller do
 
         expect(response.status).to eq 422
         response_body = JSON.parse(response.body)
-        response = response_body['errors']
-        expect(response).to eq(
+        errors_response = response_body['errors']
+        expect(errors_response).to eq(
           { 'state' => ['is the wrong length (should be 2 characters)'] }
         )
       end
@@ -122,6 +123,7 @@ describe Api::AddressesController, type: :controller do
     context 'with -> DELETE action' do
       it 'delete address using id ' do
         delete "/api/addresses/#{address.id}", body: { id: 1 }
+
         response_body = JSON.parse(response.body)
         expect(response_body['deleted']).to eq(true)
       end
