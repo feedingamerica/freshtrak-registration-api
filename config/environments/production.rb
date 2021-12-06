@@ -17,7 +17,7 @@ Jets.application.configure do
   }
 
   # API Gateway config
-  config.cors = 'https://freshtrak.com'
+  config.cors = '*'
 
   config.domain.cert_arn =
     'arn:aws:acm:us-east-2:903047886911:certificate/' \
